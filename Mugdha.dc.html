@@ -468,7 +468,7 @@ class Component extends DCLogic {
     cFabric:'Any', cColor:'Any', cBorder:'Any', cMotif:'Any', cBody:'#E6128C', cName:'',
     moodHue:325, savedCard:false, showCard:false, lang:'en', weave:'Kanchipuram', quizStep:0, quizAns:{}, petals:[],
     plpFab:'Georgette', plpHue:325, pdpColor:'#E6128C', pdpAcc:0, accOpen:'weave', arOn:false,
-    sareeFab:'All', sareeColor:'All', selProd:null };
+    sareeFab:'All', sareeColor:'All', selProd:null, storeFocus:null };
   rootRef = React.createRef();
   canvasRef = React.createRef();
   heroRef = React.createRef();
@@ -1037,19 +1037,55 @@ const PAGES = {
   },
 
   stores(c){
-    const {PAL}=c;
-    const cities=[['Hyderabad',11,PAL.pink,'62%','30%'],['Bengaluru',6,PAL.teal,'55%','62%'],['Chennai',4,PAL.marigold,'70%','66%'],['Vijayawada',3,PAL.green,'72%','46%'],['Visakhapatnam',2,PAL.violet,'82%','40%']];
+    const {PAL,s}=c;
+    // Positions are a real equirectangular projection (lon 76 to 84.5E, lat 11.5 to 19N)
+    // of each city's true coordinates, so left/top below are geography, not decoration.
+    const cities=[
+      {city:'Hyderabad',n:11,x:29.3,y:21.5,addr:'Mugdha Art Studio, Banjara Hills, Hyderabad, Telangana 500034, India'},
+      {city:'Bengaluru',n:6,x:18.8,y:80.4,addr:'Mugdha Art Studio, Indiranagar, Bengaluru, Karnataka 560038, India'},
+      {city:'Chennai',n:4,x:50.2,y:78.9,addr:'Mugdha Art Studio, T Nagar, Chennai, Tamil Nadu 600017, India'},
+      {city:'Vijayawada',n:3,x:54.7,y:33.3,addr:'Mugdha Art Studio, MG Road, Vijayawada, Andhra Pradesh 520010, India'},
+      {city:'Visakhapatnam',n:2,x:84.9,y:17.5,addr:'Mugdha Art Studio, Dwaraka Nagar, Visakhapatnam, Andhra Pradesh 530016, India'}
+    ];
+    const focus=s.storeFocus;
+    const pick=(name)=>()=>c.set({storeFocus:name});
+    const directionsUrl=(addr)=>'https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(addr);
+    // Stylised coastline (Bay of Bengal to the east), traced through the same
+    // lon/lat box as the pins above, so the silhouette and the pins agree.
+    const coastD='M94,0 L90,9 L86.5,17.3 L78,23 L73.5,27.3 L66,32 L60.6,37.3 L54,48 L48.2,60.7 L50.2,78.9 L44.7,93.3 L40,100 L0,100 L0,0 Z';
+
     return R('div',null,
       pageHead(c,PAL.teal,'Store locator','25+ stores, come feel the zari','Across Hyderabad, Bengaluru, Chennai and Andhra Pradesh. Walk in for a drape, a chai and a Silk Mark certificate.'),
       R('section',{style:{padding:'34px 0'}},wrap(R('div',{className:'mug-col2',style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'30px'}},
-        R('div',{style:{position:'relative',background:'#ECE2D2',aspectRatio:'1/1',overflow:'hidden',boxShadow:'inset 0 0 0 1px rgba(168,136,78,.4)'}},
-          cities.map((ct,i)=>R('div',{key:i,style:{position:'absolute',left:ct[3],top:ct[4],transform:'translate(-50%,-100%)',textAlign:'center'}},
-            R('div',{style:{width:'18px',height:'18px',borderRadius:'50% 50% 50% 0',background:ct[2],transform:'rotate(45deg)',margin:'0 auto',boxShadow:'0 4px 10px rgba(0,0,0,.2)'}}),
-            R('div',{style:{fontSize:'11px',fontWeight:600,marginTop:'4px',transform:'translateY(2px)'}},ct[0])))),
+        R('div',{style:{position:'relative',aspectRatio:'1/1',overflow:'hidden',borderRadius:'4px',background:'#22363A',boxShadow:'inset 0 0 0 1px rgba(168,136,78,.4)'}},
+          R('svg',{viewBox:'0 0 100 100',preserveAspectRatio:'none',style:{position:'absolute',inset:0,width:'100%',height:'100%'}},
+            R('path',{d:coastD,fill:'#E4D8C2'}),
+            R('path',{d:coastD,fill:'none',stroke:UI.gold,strokeWidth:0.4,opacity:0.6})),
+          R('div',{style:{position:'absolute',top:'8%',right:'6%',fontSize:'9px',letterSpacing:'.3em',color:'rgba(245,239,230,.5)',textTransform:'uppercase',writingMode:'vertical-rl'}},'Bay of Bengal'),
+          cities.map((ct,i)=>{
+            const active=focus===ct.city;
+            return R('button',{key:i,onClick:pick(ct.city),'aria-label':'Highlight '+ct.city+' on the map',
+              style:{position:'absolute',left:ct.x+'%',top:ct.y+'%',transform:'translate(-50%,-100%)',textAlign:'center',border:0,background:'none',cursor:'pointer',padding:0}},
+              R('div',{style:{position:'relative',width:'24px',height:'24px',margin:'0 auto'}},
+                R('div',{style:{position:'absolute',inset:0,borderRadius:'50% 50% 50% 0',transform:'rotate(-45deg)',
+                  background:active?UI.oxblood:PAL.gold,
+                  boxShadow:active?'0 0 0 5px rgba(106,30,36,.18), 0 6px 14px rgba(26,14,27,.4)':'0 6px 14px rgba(26,14,27,.35)',
+                  transition:'background .25s, box-shadow .25s'}}),
+                R('div',{style:{position:'absolute',top:'-7px',right:'-8px',minWidth:'17px',height:'17px',padding:'0 3px',borderRadius:'50%',
+                  background:UI.oxblood,color:'#FFF8F0',fontSize:'10px',fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 0 0 2px #E4D8C2'}},ct.n)),
+              R('div',{style:{fontSize:'11px',fontWeight:600,marginTop:'6px',letterSpacing:'.01em',color:active?UI.oxblood:'#2C1B20'}},ct.city));
+          })),
         R('div',{style:{display:'flex',flexDirection:'column',gap:'12px'}},
-          cities.map((ct,i)=>R('div',{key:i,style:{display:'flex',alignItems:'center',justifyContent:'space-between',background:'#fff',borderRadius:'16px',padding:'18px 20px',boxShadow:'0 8px 20px rgba(26,14,27,.06)',borderLeft:'4px solid '+ct[2]}},
-            R('div',null,R('div',{style:{fontFamily:"'Fraunces'",fontWeight:600,fontSize:'20px'}},ct[0]),R('div',{style:{color:'#8a4a6f',fontSize:'14px'}},ct[1]+' stores · open daily')),
-            alink('Directions',c.waLink('Hi Mugdha! Share the nearest store in '+ct[0]+'.'),PAL.green,'#fff',{padding:'10px 16px',fontSize:'13.5px'}))))
+          cities.map((ct,i)=>{
+            const active=focus===ct.city;
+            return R('div',{key:i,onClick:pick(ct.city),
+              style:{display:'flex',alignItems:'center',justifyContent:'space-between',background:active?'rgba(201,162,39,.08)':'#fff',
+                borderRadius:'16px',padding:'18px 20px',cursor:'pointer',
+                boxShadow:active?'0 10px 24px rgba(106,30,36,.14)':'0 8px 20px rgba(26,14,27,.06)',
+                borderLeft:'3px solid '+(active?UI.oxblood:UI.gold),transition:'background .25s, box-shadow .25s'}},
+              R('div',null,R('div',{style:{fontFamily:"'Fraunces'",fontWeight:600,fontSize:'20px'}},ct.city),R('div',{style:{color:'#8a4a6f',fontSize:'14px'}},ct.n+' stores · open daily')),
+              alink('Directions',directionsUrl(ct.addr),PAL.green,'#fff',{padding:'10px 16px',fontSize:'13.5px'}));
+          }))
       )))
     );
   },
