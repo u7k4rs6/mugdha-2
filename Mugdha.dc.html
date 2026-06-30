@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mugdha — Heritage Silk Sarees</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<script src="catalogue.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&amp;f[]=general-sans@400,500,600,700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&amp;family=Fraunces:opsz,wght@9..144,400;9..144,500&amp;family=Noto+Serif+Tamil:wght@400;500&amp;family=Noto+Serif+Devanagari:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:#F5EFE6;color:#2C1B20;font-family:'General Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  ::selection{background:#6A1E24;color:#F5EFE6}
+  ::-webkit-scrollbar{height:9px;width:9px}
+  ::-webkit-scrollbar-thumb{background:rgba(168,136,78,.45);border-radius:10px}
+  @keyframes mug-marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @keyframes mug-shimmer{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+  @keyframes mug-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  @keyframes mug-draw{from{stroke-dashoffset:var(--len)}to{stroke-dashoffset:0}}
+  @keyframes mug-petal{0%{opacity:1;transform:translate(0,0) rotate(0) scale(.5)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--dr)) scale(1.1)}}
+  @keyframes mug-spec{0%{transform:translateX(-60%) rotate(8deg)}100%{transform:translateX(220%) rotate(8deg)}}
+  @keyframes mug-smoke{0%{transform:translateY(20px) scale(1);opacity:.0}40%{opacity:.5}100%{transform:translateY(-70px) scale(1.5);opacity:0}}
+  @keyframes mug-flicker{0%,100%{opacity:.85}45%{opacity:.55}70%{opacity:1}}
+  @keyframes mug-rays{0%{opacity:.32;transform:translateX(-3%)}100%{opacity:.5;transform:translateX(3%)}}
+  .mug-silk-ripple{filter:url(#mugSilkRipple)}
+  .mug-spec{animation:mug-spec 9s ease-in-out infinite alternate}
+  .mug-smoke{animation:mug-smoke linear infinite}
+  .mug-rays{animation:mug-rays 7s ease-in-out infinite alternate}
+  .mug-flicker{animation:mug-flicker 4s ease-in-out infinite}
+  .mug-hover-rise{transition:opacity .6s ease}
+  .mug-zoom{overflow:hidden}
+  .mug-zoom img{transition:transform 1.5s cubic-bezier(.22,1,.36,1)}
+  .mug-zoom:hover img{transform:scale(1.05)}
+  .mug-view{opacity:0;transition:opacity .5s ease}
+  .mug-zoom:hover .mug-view{opacity:1}
+  @media (prefers-reduced-motion: reduce){*{animation-duration:.001s !important;animation-iteration-count:1 !important}}
+  :focus-visible{outline:3px solid #0CA4A5;outline-offset:2px;border-radius:6px}
+  .mug-only-m{display:none}
+  @media(min-width:721px){ .mug-only-m{display:none !important} }
+  @media(max-width:720px){
+    .mug-only-m{display:flex !important}
+    .mug-hide-m{display:none !important}
+    .mug-root{padding-bottom:74px !important}
+    .mug-hero{height:auto !important;min-height:0 !important;display:flex !important;flex-direction:column !important}
+    .mug-herocanvas{position:relative !important;width:100% !important;height:56vw !important;min-height:230px !important}
+    .mug-herobody{padding:26px 18px 34px !important}
+    .mug-h1{font-size:13.5vw !important;max-width:none !important}
+    .mug-col2{grid-template-columns:1fr !important}
+    .mug-bento{grid-template-columns:1fr !important;grid-auto-rows:auto !important}
+    .mug-bento>*{grid-column:auto !important;grid-row:auto !important;height:210px !important}
+    .mug-g3{grid-template-columns:1fr !important}
+    .mug-g4{grid-template-columns:1fr 1fr !important}
+    .mug-g6{grid-template-columns:1fr 1fr !important}
+    .mug-herosilk{position:relative !important;width:100% !important;height:66vw !important}
+    .mug-herowrap{min-height:0 !important;padding:30px 18px 42px !important}
+    .mug-hh1{font-size:10.5vw !important}
+  }
+</style>
+</helmet>
+<div ref="{{ rootRef }}" class="mug-root" style="position:relative;overflow-x:hidden;background:#FFF8F0;color:#1A0E1B;min-height:100vh">
+
+  <div style="position:relative;z-index:60;background:#1A0E1B;color:#FFF8F0;overflow:hidden">
+    <div style="display:flex;width:max-content;animation:mug-marquee 40s linear infinite;white-space:nowrap;padding:9px 0;font-size:13px;letter-spacing:.06em;font-weight:500">
+      <span style="display:inline-flex;gap:34px;padding-right:34px">{{ tickerA }}</span>
+      <span style="display:inline-flex;gap:34px;padding-right:34px">{{ tickerB }}</span>
+    </div>
+  </div>
+  <div style="position:relative;z-index:60;background:#1A0E1B;line-height:0">{{ templeBorder }}</div>
+
+  <header style="position:sticky;top:0;z-index:55;backdrop-filter:blur(14px);background:{{ headerBg }};border-bottom:1px solid rgba(26,14,27,.07);transition:background .4s">
+    <div style="max-width:1320px;margin:0 auto;padding:0 26px;height:68px;display:flex;align-items:center;justify-content:space-between;gap:20px">
+      <button onClick="{{ goHome }}" style="border:0;background:none;cursor:pointer;padding:0;display:flex;align-items:baseline;gap:8px">
+        <span style="font-family:'Clash Display';font-weight:700;font-size:27px;letter-spacing:-.01em;color:{{ wordmarkColor }};transition:color .3s">MUGDHA</span>
+        <span style="font-family:'Noto Serif Devanagari';font-size:14px;color:#C9A227">उत्सव</span>
+      </button>
+      <nav class="mug-hide-m" style="display:flex;align-items:center;gap:2px">
+        <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="6">
+          <button onClick="{{ n.go }}" style="border:0;background:none;cursor:pointer;font-weight:{{ n.weight }};font-size:14.5px;color:{{ n.color }};padding:9px 12px;border-radius:9px;white-space:nowrap">{{ n.label }}</button>
+        </sc-for>
+      </nav>
+      <div style="display:flex;align-items:center;gap:9px">
+        <div style="display:flex;gap:2px;background:rgba(26,14,27,.06);border-radius:24px;padding:3px" role="group" aria-label="Language">
+          <sc-for list="{{ langButtons }}" as="lng" hint-placeholder-count="4">
+            <button onClick="{{ lng.pick }}" title="{{ lng.code }}" style="border:0;cursor:pointer;background:{{ lng.bg }};color:{{ lng.fg }};font-weight:600;font-size:13px;min-width:30px;padding:6px 7px;border-radius:20px">{{ lng.label }}</button>
+          </sc-for>
+        </div>
+        <button onClick="{{ toggleSound }}" class="mug-hide-m" title="Festive sound" style="width:38px;height:38px;border-radius:50%;border:1px solid rgba(26,14,27,.14);background:{{ soundBg }};color:#1A0E1B;cursor:pointer;font-size:14px">{{ soundIcon }}</button>
+        <button onClick="{{ goStudio }}" class="mug-hide-m" style="display:flex;align-items:center;gap:7px;border:0;cursor:pointer;background:#1A0E1B;color:#FFF8F0;font-weight:600;font-size:13.5px;padding:9px 13px;border-radius:30px"><span style="color:#FF6FBE">❀</span><span>{{ wishCount }}</span></button>
+        <a href="{{ waMain }}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:7px;text-decoration:none;background:#57B947;color:#fff;font-weight:600;font-size:13.5px;padding:10px 15px;border-radius:30px">WhatsApp</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <div>
+
+      <section ref="{{ heroRef }}" class="mug-hero" style="position:relative;background:radial-gradient(120% 130% at 64% 18%, #20131A 0%, #160A0F 64%, #100709 100%);overflow:hidden">
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+          <filter id="mugSilkRipple" x="-6%" y="-6%" width="112%" height="112%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.009 0.014" numOctaves="2" seed="7" result="n"></feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="n" xChannelSelector="R" yChannelSelector="G" scale="9">
+              <animate attributeName="scale" values="6;13;6" dur="8s" repeatCount="indefinite"></animate>
+            </feDisplacementMap>
+          </filter>
+        </defs></svg>
+
+        <div class="mug-rays mug-hide-m" style="position:absolute;top:-10%;left:30%;width:60%;height:120%;background:linear-gradient(102deg, rgba(233,199,102,0) 42%, rgba(233,199,102,.13) 50%, rgba(233,199,102,0) 58%);pointer-events:none;z-index:1"></div>
+
+        <div class="mug-herosilk" style="position:absolute;top:0;right:0;bottom:0;width:53%;overflow:hidden;z-index:1">
+          <img ref="{{ silkRef }}" src="https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1771829391494__1771829391308__Designer%2520Blend.jpg" alt="Mugdha silk drape in lamplight" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;filter:saturate(1.22) contrast(1.05) brightness(1.12)">
+          <div style="position:absolute;inset:0;background:radial-gradient(82% 86% at 52% 46%, rgba(16,7,9,0) 0%, rgba(16,7,9,.14) 62%, rgba(16,7,9,.42) 100%);z-index:2"></div>
+          <div class="mug-flicker" style="position:absolute;inset:0;background:radial-gradient(54% 58% at 50% 44%, rgba(233,199,102,.34), rgba(224,138,30,.12) 52%, transparent 76%);mix-blend-mode:screen;pointer-events:none;z-index:2"></div>
+          <div class="mug-flicker" style="position:absolute;left:38%;bottom:6%;width:60%;height:42%;background:radial-gradient(circle, rgba(224,138,30,.2), transparent 70%);mix-blend-mode:screen;pointer-events:none;z-index:2;animation-delay:2s"></div>
+          <div class="mug-spec" style="position:absolute;top:-20%;left:0;width:30%;height:140%;background:linear-gradient(90deg, rgba(233,199,102,0), rgba(233,199,102,.5), rgba(255,247,224,.18), rgba(233,199,102,0));mix-blend-mode:screen;filter:blur(7px);pointer-events:none;z-index:3"></div>
+        </div>
+
+        <div class="mug-flicker mug-hide-m" style="position:absolute;left:8%;top:24%;width:7px;height:7px;border-radius:50%;background:#E9C766;box-shadow:0 0 24px 8px rgba(224,138,30,.5);z-index:2"></div>
+        <div class="mug-flicker mug-hide-m" style="position:absolute;left:40%;top:64%;width:6px;height:6px;border-radius:50%;background:#E9C766;box-shadow:0 0 20px 6px rgba(224,138,30,.45);animation-delay:1.4s;z-index:2"></div>
+
+        <div style="position:absolute;left:-12%;bottom:-30%;width:46%;height:80%;background:radial-gradient(circle, rgba(120,86,40,.22), transparent 70%);filter:blur(26px);pointer-events:none;z-index:1" class="mug-smoke"></div>
+
+        <div class="mug-hide-m" style="position:absolute;top:0;bottom:0;left:47%;width:1px;background:linear-gradient(#C9A227,#7a5e1e);z-index:4"></div>
+        <span class="mug-hide-m" style="position:absolute;left:47%;margin-left:-30px;top:50%;transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl;font-size:10px;letter-spacing:.44em;color:#C9A227;text-transform:uppercase;z-index:4">Silk Mark · Pure Zari</span>
+
+        <div class="mug-herowrap" style="position:relative;z-index:5;max-width:none;margin:0;padding:56px 40px 56px clamp(24px,4vw,72px);min-height:78vh;display:flex;flex-direction:column;justify-content:center">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:30px">{{ heroLabel }}</div>
+          <div style="position:relative;max-width:52%">
+            <h1 class="mug-hh1" style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(38px,6.2vw,84px);line-height:1.06;letter-spacing:.004em;color:#F4EFE3;text-wrap:balance;text-shadow:0 2px 30px rgba(0,0,0,.55)">{{ heroTitle }}</h1>
+            <p style="margin:26px 0 0;max-width:34ch;font-size:16px;line-height:1.75;color:rgba(244,239,227,.82);text-shadow:0 1px 18px rgba(0,0,0,.6)">{{ heroSub }}</p>
+            <button onClick="{{ goStudio }}" style="margin-top:34px;border:1px solid #C9A227;background:rgba(201,162,39,.14);color:#F4EFE3;cursor:pointer;font-weight:500;letter-spacing:.06em;font-size:14px;padding:16px 38px;border-radius:2px;backdrop-filter:blur(2px)">{{ ctaDesign }}</button>
+          </div>
+        </div>
+      </section>
+
+      <div style="background:#F5EFE6;padding:46px 0 8px;display:flex;flex-direction:column;align-items:center;gap:18px">
+        <div style="opacity:.8">{{ kolamMuteT }}</div>
+        <div style="width:200px;line-height:0;opacity:.7">{{ templeRuleGold }}</div>
+      </div>
+      <section style="background:#F5EFE6;padding:30px 0 104px">
+        <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:24px;margin-bottom:56px">
+            <div style="max-width:62%">
+              <div style="margin-bottom:18px">{{ fabricLabel }}</div>
+              <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(34px,4.8vw,62px);line-height:1.02;color:#2C1B20">{{ secFabricTitle }}</h2>
+            </div>
+            <p style="max-width:32ch;font-size:15px;line-height:1.75;color:#7A6A66;margin:0 0 8px">Sarees are finished drapes, ready to wear. Fabrics are the cloth, by the metre.</p>
+          </div>
+          <div class="mug-g3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:48px 36px">
+            <sc-for list="{{ fabricTiles }}" as="t" hint-placeholder-count="6">
+              <button onClick="{{ t.open }}" class="mug-zoom" style="border:0;background:none;cursor:pointer;padding:0;text-align:left;display:block">
+                <span style="position:relative;display:block;overflow:hidden;aspect-ratio:4/5;box-shadow:inset 0 0 0 1px rgba(168,136,78,.4)">
+                  <img src="{{ t.img }}" alt="{{ t.name }} silk" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+                  <span class="mug-view" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(30,16,22,.22)"><span style="color:#F5EFE6;font-size:12px;letter-spacing:.18em;text-transform:uppercase;border-bottom:1px solid #F5EFE6;padding-bottom:3px">View</span></span>
+                </span>
+                <span style="display:flex;align-items:baseline;justify-content:space-between;margin-top:16px">
+                  <span style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:23px;color:#2C1B20">{{ t.name }}</span>
+                  <span style="font-family:'Noto Serif Devanagari';font-size:13px;color:#A8884E">{{ t.script }}</span>
+                </span>
+                <span style="display:block;font-size:12.5px;letter-spacing:.03em;color:#8B7A73;margin-top:3px">{{ t.sub }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section style="background:#ECE2D2;padding:96px 0 104px">
+        <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+          <div style="margin-bottom:52px;max-width:60ch">
+            <div style="margin-bottom:16px">{{ moodLabel }}</div>
+            <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(34px,4.8vw,62px);line-height:1.02;color:#2C1B20">{{ secMoodTitle }}</h2>
+            <p style="margin:16px 0 0;max-width:42ch;font-size:15px;line-height:1.75;color:#7A6A66">In Indian textile, colour leads. Six edits, each a different silk.</p>
+          </div>
+          <div class="mug-g3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:48px 36px">
+            <sc-for list="{{ moodStories }}" as="m" hint-placeholder-count="6">
+              <button onClick="{{ m.go }}" class="mug-zoom" style="border:0;background:none;cursor:pointer;padding:0;text-align:center;display:block">
+                <span style="position:relative;display:block;overflow:hidden;aspect-ratio:4/5;box-shadow:inset 0 0 0 1px rgba(168,136,78,.4)">
+                  <img src="{{ m.img }}" alt="{{ m.name }} silk" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+                  <span class="mug-view" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(30,16,22,.22)"><span style="color:#F5EFE6;font-size:12px;letter-spacing:.18em;text-transform:uppercase;border-bottom:1px solid #F5EFE6;padding-bottom:3px">View</span></span>
+                </span>
+                <span style="display:block;width:30px;height:1px;background:#A8884E;margin:18px auto 12px"></span>
+                <span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:23px;color:#2C1B20">{{ m.name }}</span>
+                <span style="display:block;font-size:12.5px;letter-spacing:.04em;color:#8B7A73;margin-top:3px">{{ m.sub }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section style="position:relative;background:radial-gradient(120% 120% at 50% 0%, #20131A 0%, #160A0F 70%, #100709 100%);color:#F5EFE6;padding:128px 0 104px;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;display:flex;justify-content:center;pointer-events:none;z-index:1;opacity:.5">{{ gopuramGold }}</div>
+        <div style="position:absolute;top:64px;left:0;right:0;display:flex;justify-content:center;pointer-events:none;z-index:1">{{ kolamGoldT }}</div>
+        <div class="mug-flicker" style="position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:680px;height:320px;background:radial-gradient(circle, rgba(233,199,102,.13), transparent 70%);pointer-events:none;z-index:0"></div>
+        <div class="mug-col2" style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center">
+          <div>
+            <div style="font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#C9A227;margin-bottom:18px">{{ secDesignEyebrow }}</div>
+            <h2 style="margin:0 0 16px;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(34px,4.6vw,58px);line-height:1.05;color:#F5EFE6">{{ secDesignTitle }}</h2>
+            <p style="margin:0 0 30px;max-width:44ch;font-size:15.5px;line-height:1.75;color:rgba(245,239,230,.66)">Choose the silk, the colour, the border and the pallu. We show you the Mugdha sarees that match, ready to reserve.</p>
+
+            <div style="margin-bottom:18px">
+              <div style="font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#A8884E;margin-bottom:9px">Fabric</div>
+              <div style="display:flex;flex-wrap:wrap;gap:7px">
+                <sc-for list="{{ findFabrics }}" as="f" hint-placeholder-count="7">
+                  <button onClick="{{ f.pick }}" style="border:1px solid {{ f.bd }};background:{{ f.bg }};color:{{ f.fg }};cursor:pointer;font-weight:500;font-size:13px;padding:8px 14px;border-radius:2px">{{ f.name }}</button>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:28px;flex-wrap:wrap;margin-bottom:18px">
+              <div>
+                <div style="font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#A8884E;margin-bottom:9px">Body colour</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;max-width:280px">
+                  <sc-for list="{{ findColors }}" as="c" hint-placeholder-count="7">
+                    <button onClick="{{ c.pick }}" title="{{ c.name }}" style="display:inline-flex;align-items:center;gap:6px;border:1px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};cursor:pointer;font-size:12px;padding:6px 11px;border-radius:2px">
+                      <span style="width:11px;height:11px;border-radius:50%;background:{{ c.dot }};box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)"></span>{{ c.name }}
+                    </button>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-bottom:18px">
+              <div style="font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#A8884E;margin-bottom:9px">Korvai border</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;max-width:340px">
+                <sc-for list="{{ findBorders }}" as="c" hint-placeholder-count="7">
+                  <button onClick="{{ c.pick }}" title="{{ c.name }}" style="display:inline-flex;align-items:center;gap:6px;border:1px solid {{ c.bd }};background:{{ c.bg }};color:{{ c.fg }};cursor:pointer;font-size:12px;padding:6px 11px;border-radius:2px">
+                    <span style="width:11px;height:11px;border-radius:50%;background:{{ c.dot }};box-shadow:inset 0 0 0 1px rgba(255,255,255,.2)"></span>{{ c.name }}
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="margin-bottom:22px">
+              <div style="font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#A8884E;margin-bottom:9px">Pallu motif</div>
+              <div style="display:flex;gap:7px;flex-wrap:wrap">
+                <sc-for list="{{ findMotifs }}" as="m" hint-placeholder-count="4">
+                  <button onClick="{{ m.pick }}" style="border:1px solid {{ m.bd }};background:{{ m.bg }};color:{{ m.fg }};cursor:pointer;font-weight:500;font-size:13px;padding:8px 14px;border-radius:2px">{{ m.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+
+            <button onClick="{{ findReset }}" style="border:0;background:none;cursor:pointer;color:#A8884E;font-size:13px;letter-spacing:.04em;padding:4px 1px;border-bottom:1px solid rgba(168,136,78,.5)">Reset filters</button>
+          </div>
+
+          <div style="position:relative">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px">
+              <div style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#F5EFE6">{{ findHeading }}</div>
+              <div style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#A8884E">Lamp-lit picks</div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <sc-for list="{{ findResults }}" as="r" hint-placeholder-count="4">
+                <div style="background:#F5EFE6;box-shadow:inset 0 0 0 1px rgba(168,136,78,.45);display:flex;flex-direction:column">
+                  <button onClick="{{ r.open }}" class="mug-zoom" style="border:0;background:none;cursor:pointer;padding:0;display:block">
+                    <span style="position:relative;display:block;overflow:hidden;aspect-ratio:4/5">
+                      <img src="{{ r.img }}" alt="{{ r.name }}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>
+                    </span>
+                  </button>
+                  <div style="padding:11px 13px 13px;display:flex;flex-direction:column;gap:8px;flex:1">
+                    <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:16px;line-height:1.15;color:#2C1B20">{{ r.name }}</div>
+                    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-top:auto">
+                      <span style="font-size:11.5px;color:#8B7A73">{{ r.fabric }}</span>
+                      <span style="font-size:13px;font-weight:300;color:#2C1B20">{{ r.price }}</span>
+                    </div>
+                    <a href="{{ r.wa }}" target="_blank" rel="noopener" style="text-decoration:none;text-align:center;background:#57B947;color:#fff;font-weight:500;font-size:12.5px;letter-spacing:.02em;padding:10px;border-radius:2px">Reserve on WhatsApp</a>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="background:#F5EFE6;padding:24px 0 104px">
+        <div style="max-width:1280px;margin:0 auto;padding:0 40px">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-bottom:52px">
+            <div>
+              <div style="margin-bottom:16px">{{ dropsLabel }}</div>
+              <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(34px,4.8vw,62px);line-height:1.02;color:#2C1B20">{{ secDropsTitle }}</h2>
+            </div>
+            <button onClick="{{ goFabrics }}" style="border:0;background:none;cursor:pointer;color:#2C1B20;font-size:13.5px;letter-spacing:.05em;padding:6px 1px;border-bottom:1px solid #A8884E;margin-bottom:10px">View all</button>
+          </div>
+          <div class="mug-g3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:48px 36px">
+            <sc-for list="{{ drops }}" as="d" hint-placeholder-count="3">
+              <button onClick="{{ d.open }}" class="mug-zoom" style="border:0;background:none;cursor:pointer;padding:0;text-align:left;display:block">
+                <span style="position:relative;display:block;overflow:hidden;aspect-ratio:4/5;box-shadow:inset 0 0 0 1px rgba(168,136,78,.4)">
+                  <img src="{{ d.img }}" alt="{{ d.name }}" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+                  <span class="mug-view" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(30,16,22,.22)"><span style="color:#F5EFE6;font-size:12px;letter-spacing:.18em;text-transform:uppercase;border-bottom:1px solid #F5EFE6;padding-bottom:3px">View</span></span>
+                </span>
+                <div style="margin-top:16px">
+                  <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:22px;line-height:1.15;color:#2C1B20">{{ d.name }}</div>
+                  <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-top:5px">
+                    <span style="font-size:13px;color:#8B7A73">{{ d.fab }}</span>
+                    <span style="font-size:14px;font-weight:300;color:#2C1B20">{{ d.price }}</span>
+                  </div>
+                </div>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section style="position:relative;background:radial-gradient(120% 120% at 50% 0%, #20131A 0%, #160A0F 72%, #100709 100%);color:#FFF8F0;padding:128px 0 104px;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;display:flex;justify-content:center;pointer-events:none;z-index:1;opacity:.5">{{ gopuramGold }}</div>
+        <div style="position:absolute;top:64px;left:0;right:0;display:flex;justify-content:center;pointer-events:none;z-index:1">{{ kolamGoldT }}</div>
+        <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 40px">
+          <div style="margin-bottom:14px">{{ craftLabel }}</div>
+          <h2 style="margin:0 0 32px;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(34px,4.6vw,58px);line-height:1.05;color:#F5EFE6">The making, up close</h2>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:30px">
+            <sc-for list="{{ weaveTabs }}" as="w" hint-placeholder-count="3">
+              <button onClick="{{ w.pick }}" style="border:1px solid {{ w.bd }};background:{{ w.bg }};color:{{ w.fg }};cursor:pointer;font-weight:500;letter-spacing:.03em;font-size:14px;padding:11px 22px;border-radius:2px">{{ w.k }}</button>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center">
+            <div>
+              <div style="font-family:'Noto Serif Tamil';font-size:46px;color:{{ weaveColor }};line-height:1;margin-bottom:14px">{{ weaveTamil }}</div>
+              <p style="margin:0 0 18px;font-size:19px;line-height:1.55;color:rgba(255,248,240,.86);max-width:46ch">{{ weaveBody }}</p>
+              <div style="display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(201,162,39,.4);padding:10px 18px;font-weight:500;letter-spacing:.03em;font-size:13.5px;color:#E9C766">On the loom · {{ weaveDays }}</div>
+            </div>
+            <div>{{ weaveScene }}</div>
+          </div>
+        </div>
+      </section>
+
+      <section style="position:relative;background:radial-gradient(120% 120% at 50% 0%, #20131A 0%, #160A0F 72%, #100709 100%);padding:196px 0 104px;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;display:flex;justify-content:center;pointer-events:none;z-index:1;opacity:.5">{{ gopuramGold }}</div>
+        <div style="position:absolute;top:64px;left:0;right:0;display:flex;justify-content:center;pointer-events:none;z-index:1">{{ kolamGoldT }}</div>
+        <div class="mug-col2" style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:.95fr 1.05fr;gap:60px;align-items:center">
+          <div class="mug-zoom" style="position:relative;overflow:hidden;aspect-ratio:4/5;box-shadow:inset 0 0 0 1px rgba(201,162,39,.45)">
+            <img src="https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1771307031443__1768832146285__Kora%2520Silk.jpg" alt="Mugdha bridal silk in lamplight" loading="lazy" style="width:100%;height:100%;object-fit:cover;filter:saturate(1.28) brightness(1.16)">
+            <div style="position:absolute;inset:0;background:radial-gradient(74% 74% at 50% 40%, rgba(16,7,9,0), rgba(16,7,9,.46) 92%)"></div>
+            <div class="mug-flicker" style="position:absolute;inset:0;background:radial-gradient(44% 46% at 50% 42%, rgba(233,199,102,.22), transparent 70%);mix-blend-mode:screen"></div>
+          </div>
+          <div>
+            <div style="font-family:'Noto Serif Devanagari';font-size:16px;letter-spacing:.06em;color:#C9A227;margin-bottom:16px">मुहूर्तम्</div>
+            <h2 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(34px,4.8vw,64px);line-height:1.04;color:#F4EFE3">The bride wears Mugdha</h2>
+            <p style="margin:24px 0 0;max-width:42ch;font-size:16px;line-height:1.8;color:rgba(244,239,227,.72)">Kanchipuram heirlooms, a quiet appointment, and a stylist who knows muhurtham timing. Begin the trousseau.</p>
+            <div style="margin-top:34px;display:flex;align-items:center;gap:28px;flex-wrap:wrap">
+              <button onClick="{{ goBridal }}" style="border:1px solid #C9A227;background:rgba(201,162,39,.14);color:#F4EFE3;cursor:pointer;font-weight:500;letter-spacing:.05em;font-size:14px;padding:15px 32px;border-radius:2px">Enter the bridal world</button>
+              <button onClick="{{ goAr }}" style="border:0;background:none;cursor:pointer;color:#E9C766;font-size:14.5px;letter-spacing:.05em;padding:6px 1px;border-bottom:1px solid #C9A227">Try it on you</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="background:#1E1016;color:#F5EFE6;padding:104px 0">
+        <div class="mug-col2" style="max-width:1280px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+          <div>
+            <div style="margin-bottom:18px">{{ storesLabel }}</div>
+            <h2 style="margin:0 0 16px;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(32px,4.4vw,56px);line-height:1.05;color:#F5EFE6">Twenty five stores, and counting</h2>
+            <p style="margin:0 0 30px;max-width:40ch;font-size:15.5px;line-height:1.8;color:rgba(245,239,230,.62)">Across Hyderabad, Bengaluru, Chennai and Andhra Pradesh. Walk in for a drape, a chai and a Silk Mark certificate.</p>
+            <button onClick="{{ goStores }}" style="border:1px solid rgba(168,136,78,.6);background:none;color:#F5EFE6;cursor:pointer;font-size:14px;letter-spacing:.05em;padding:14px 30px;border-radius:2px">Find a store</button>
+          </div>
+          <div>
+            <sc-for list="{{ stores }}" as="s" hint-placeholder-count="5">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;padding:18px 0;border-bottom:1px solid rgba(168,136,78,.25)">
+                <span style="font-family:'Cormorant Garamond',serif;font-size:24px;color:#F5EFE6">{{ s.city }}</span>
+                <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#A8884E">{{ s.n }} stores</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      {{ footerEl }}
+
+    </div>
+    </sc-if>
+    {{ otherView }}
+  </main>
+
+  {{ shareCard }}
+
+  <nav class="mug-only-m" aria-label="Primary" style="position:fixed;left:0;right:0;bottom:0;z-index:80;background:#1A0E1B;justify-content:space-around;align-items:stretch;padding:7px 4px 9px;border-top:2px solid #C9A227">
+    <button onClick="{{ bnHomeGo }}" style="flex:1;border:0;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ cHome }};font-weight:600;font-size:10.5px"><span style="font-size:18px;line-height:1">⌂</span>{{ lblHome }}</button>
+    <button onClick="{{ bnSearchGo }}" style="flex:1;border:0;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ cSearch }};font-weight:600;font-size:10.5px"><span style="font-size:18px;line-height:1">⌕</span>{{ lblSearch }}</button>
+    <button onClick="{{ bnDesignGo }}" style="flex:1;border:0;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ cDesign }};font-weight:600;font-size:10.5px"><span style="font-size:18px;line-height:1">✦</span>{{ lblDesign }}</button>
+    <button onClick="{{ bnWishGo }}" style="flex:1;border:0;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;color:rgba(255,248,240,.66);font-weight:600;font-size:10.5px"><span style="font-size:16px;line-height:1;color:#FF6FBE">❀</span>{{ lblWish }}</button>
+    <a href="{{ waMain }}" target="_blank" rel="noopener" style="flex:1;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:3px;color:#57B947;font-weight:600;font-size:10.5px"><span style="font-size:17px;line-height:1">✆</span>WhatsApp</a>
+  </nav>
+
+  {{ petalLayer }}
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1320,&quot;height&quot;:900}}">
+const PAL = { pink:'#E6128C', teal:'#0CA4A5', marigold:'#FFB100', green:'#57B947', red:'#E23A2E', violet:'#5B2A9D', gold:'#C9A227', kora:'#FFF8F0', plum:'#1A0E1B' };
+const UI = { ivory:'#F5EFE6', ivory2:'#ECE2D2', plum:'#1E1016', oxblood:'#6A1E24', gold:'#A8884E', goldH:'rgba(168,136,78,.5)', ink:'#2C1B20', mute:'#8B7A73',
+  stone:'#1A0E12', stone2:'#20131A', lampGold:'#C9A227', lampHi:'#E9C766', marigold:'#E08A1E', peacock:'#0E5C58' };
+const FABRIC_IMG = {
+  'Chiffon':'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1771307031283__1768832096507__Chiffon%2520%25281%2529.jpg',
+  'Designer Blend':'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1771829391494__1771829391308__Designer%2520Blend.jpg',
+  'Georgette':'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1771307030445__1768831934227__georgette.jpg',
+  'Tussar':'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1771307030641__1768831960300__Tussar.jpg',
+  'Kora Silk':'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1771307031443__1768832146285__Kora%2520Silk.jpg',
+  'Crepe':'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1771829281068__1771829280886__crepe.jpg'
+};
+const BASE_SILK = FABRIC_IMG['Chiffon'];   // neutral silk texture used as the recolor base
+const HERO_SILK = FABRIC_IMG['Designer Blend']; // rich full-bleed hero drape
+const EDITORIAL_SILK = FABRIC_IMG['Kora Silk'];
+// Real Mugdha catalogue loaded from catalogue.js (window.MUGDHA_COLLECTION). Mapped + memoized.
+const _motifFor = (name)=>{ const n=(name||'').toLowerCase();
+  if(n.includes('temple')||n.includes('paithani')) return 'temple';
+  if(n.includes('peacock')||n.includes('bird')||n.includes('swan')||n.includes('crane')||n.includes('deer')) return 'peacock';
+  return 'buta'; };
+let _CAT_CACHE=null;
+function getCatalogue(){
+  if(_CAT_CACHE) return _CAT_CACHE;
+  const raw = (typeof window!=='undefined' && window.MUGDHA_COLLECTION && window.MUGDHA_COLLECTION.products) || null;
+  if(!raw) return FALLBACK_PRODUCTS;
+  _CAT_CACHE = raw.map((p,i)=>({ id:'MUG-'+String(1001+i), name:(p.name||'').replace(/&amp;/g,'&'),
+    price:p.price, mrp:p.mrp, offer:p.offer, color:p.color, fabric:p.fabric, img:p.image, motif:_motifFor(p.name) }));
+  return _CAT_CACHE;
+}
+function catFacets(){
+  const c = (typeof window!=='undefined' && window.MUGDHA_COLLECTION) || {};
+  return { fabrics:(c.fabricFacets||[]).map(f=>f.name), colors:(c.colorFacets||[]) };
+}
+const FALLBACK_PRODUCTS = (()=>{
+  const rows=[
+    ['Chiffon','Rani Gulal Chiffon',6400,'Pink'],['Designer Blend','Korvai Designer Blend',18900,'Red'],
+    ['Georgette','Mayil Pallu Georgette',8900,'Green'],['Tussar','Haldi Temple Tussar',11200,'Yellow'],
+    ['Kora Silk','Midnight Kora Zari',15800,'Blue'],['Crepe','Arakku Crepe Featherweight',7400,'Red']
+  ];
+  return rows.map((r,i)=>({ id:'MUG-'+String(1001+i), fabric:r[0], name:r[1], price:r[2], color:r[3], motif:_motifFor(r[1]), img:FABRIC_IMG[r[0]] }));
+})();
+const fmtINR = (n)=>'₹ '+Number(n).toLocaleString('en-IN');
+const WA_NUMBER='919999999999'; // TODO: replace with Mugdha's real WhatsApp number
+const L = {
+ en:{ navSarees:'Sarees',navFabrics:'Fabrics',navBridal:'Bridal',navStudio:'Find Your Drape',navAr:'AR Try-On',navStores:'Stores',
+  heroLabel:'Living silk · woven in house', heroSub:'Heritage silk, matched to you. Choose the silk, the colour and the motif, and we show you the Mugdha sarees that fit.',
+  ctaExplore:'Explore sarees', ctaDesign:'Find your drape', ctaReserve:'Reserve on WhatsApp',
+  bnHome:'Home',bnSearch:'Search',bnDesign:'Design',bnWishlist:'Wishlist',
+  secFabric:'The house weaves', secMood:'Read by colour', secDesign:'Find your drape', secDrops:'Newly on the loom', heroTitle:'Timeless South Indian elegance' },
+ ta:{ navSarees:'புடவைகள்',navFabrics:'துணிகள்',navBridal:'மணமகள்',navStudio:'வடிவமைப்பு',navAr:'AR முயற்சி',navStores:'கடைகள்',
+  heroLabel:'உயிருள்ள பட்டு · இல்லத்தில் நெய்தது', heroSub:'ஒளி போல அசையும் பாரம்பரிய பட்டு. உங்கள் புடவையை வடிவமைத்து, அணிந்து பார்த்து, WhatsApp-ல் முன்பதிவு செய்யுங்கள்.',
+  ctaExplore:'புடவைகளைப் பாருங்கள்', ctaDesign:'புடவையை வடிவமைக்கவும்', ctaReserve:'WhatsApp-ல் முன்பதிவு',
+  bnHome:'முகப்பு',bnSearch:'தேடல்',bnDesign:'வடிவமை',bnWishlist:'விருப்பம்',
+  secFabric:'துணி வாரியாக', secMood:'மனநிலை வாரியாக', secDesign:'புடவையை வடிவமைக்கவும்', secDrops:'புதிய வரவுகள்', heroTitle:'காலத்தால் அழியாத தென்னிந்திய நளினம்' },
+ te:{ navSarees:'చీరలు',navFabrics:'వస్త్రాలు',navBridal:'వధువు',navStudio:'డిజైన్ స్టూడియో',navAr:'AR ట్రై-ఆన్',navStores:'దుకాణాలు',
+  heroLabel:'సజీవ పట్టు · ఇంట్లో నేసినది', heroSub:'వెలుగులా కదిలే వారసత్వ పట్టు. మీ డ్రేప్‌ను డిజైన్ చేసి, ధరించి చూసి, WhatsApp లో రిజర్వ్ చేయండి.',
+  ctaExplore:'చీరలను చూడండి', ctaDesign:'మీ డ్రేప్‌ను డిజైన్ చేయండి', ctaReserve:'WhatsApp లో రిజర్వ్',
+  bnHome:'హోమ్',bnSearch:'వెతుకు',bnDesign:'డిజైన్',bnWishlist:'ఇష్టాలు',
+  secFabric:'వస్త్రం వారీగా', secMood:'మూడ్ వారీగా', secDesign:'మీ డ్రేప్‌ను డిజైన్ చేయండి', secDrops:'కొత్త రాకలు', heroTitle:'శాశ్వత దక్షిణ భారత సొగసు' },
+ hi:{ navSarees:'साड़ियाँ',navFabrics:'कपड़े',navBridal:'दुल्हन',navStudio:'डिज़ाइन स्टूडियो',navAr:'AR ट्राय-ऑन',navStores:'स्टोर',
+  heroLabel:'जीवंत रेशम · घर में बुना', heroSub:'रोशनी सी बहती विरासती रेशम। अपनी ड्रेप डिज़ाइन करें, पहनकर देखें और WhatsApp पर रिज़र्व करें।',
+  ctaExplore:'साड़ियाँ देखें', ctaDesign:'अपनी ड्रेप डिज़ाइन करें', ctaReserve:'WhatsApp पर रिज़र्व',
+  bnHome:'होम',bnSearch:'खोज',bnDesign:'डिज़ाइन',bnWishlist:'विशलिस्ट',
+  secFabric:'कपड़े से खरीदें', secMood:'मूड से खरीदें', secDesign:'अपनी ड्रेप डिज़ाइन करें', secDrops:'नए ड्रॉप्स', heroTitle:'सदाबहार दक्षिण भारतीय शृंगार' }
+};
+const h2r=(h)=>{h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];};
+const lerp=(a,b,t)=>a+(b-a)*t;
+function lerpHex(c1,c2,t){const a=h2r(c1),b=h2r(c2);return `rgb(${Math.round(lerp(a[0],b[0],t))},${Math.round(lerp(a[1],b[1],t))},${Math.round(lerp(a[2],b[2],t))})`;}
+const R = React.createElement;
+function sectionLabel(txt,color){return R('span',{style:{display:'inline-block',fontWeight:500,fontSize:'11px',letterSpacing:'.26em',textTransform:'uppercase',color}},txt);}
+
+class Component extends DCLogic {
+  state = { view:'home', scrollP:0, soundOn:false, wish:2,
+    cFabric:'Any', cColor:'Any', cBorder:'Any', cMotif:'Any', cBody:'#E6128C', cName:'',
+    moodHue:325, savedCard:false, showCard:false, lang:'en', weave:'Kanchipuram', quizStep:0, quizAns:{}, petals:[],
+    plpFab:'Georgette', plpHue:325, pdpColor:'#E6128C', pdpAcc:0, accOpen:'weave', arOn:false,
+    sareeFab:'All', sareeColor:'All', selProd:null };
+  rootRef = React.createRef();
+  canvasRef = React.createRef();
+  heroRef = React.createRef();
+  lampRef = React.createRef();
+  silkRef = React.createRef();
+  pointer = {x:0.5,y:0.5}; reduced=false; _drag=false;
+  lamp = {x:0.62,y:0.42,tx:0.62,ty:0.42};
+
+  componentDidMount(){
+    this.reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this._onScroll=()=>{ const y=window.scrollY||0; this.setState({scrollP:Math.min(1,y/520)});
+      if(this.state.view==='home'){ const past=y>window.innerHeight*0.96;
+        if(past&&this._raf){ cancelAnimationFrame(this._raf); this._raf=0; }
+        else if(!past&&!this._raf&&!this.reduced){ this.startHero(); } } };
+    window.addEventListener('scroll',this._onScroll,{passive:true});
+    this._onMove=(e)=>{this.pointer.x=e.clientX/window.innerWidth;this.pointer.y=e.clientY/window.innerHeight;};
+    window.addEventListener('pointermove',this._onMove,{passive:true});
+    this._up=()=>{this._drag=false;}; window.addEventListener('pointerup',this._up);
+    if(this.state.view==='home') this.startHero();
+    // catalogue.js may finish loading after first paint; refresh once it is ready
+    if(!(window.MUGDHA_COLLECTION && window.MUGDHA_COLLECTION.products)){
+      let tries=0; this._catTimer=setInterval(()=>{ tries++;
+        if(window.MUGDHA_COLLECTION && window.MUGDHA_COLLECTION.products){ clearInterval(this._catTimer); _CAT_CACHE=null; this.forceUpdate(); }
+        else if(tries>40){ clearInterval(this._catTimer); } }, 100);
+    }
+  }
+  componentDidUpdate(prev){ if(prev.view!==this.state.view){ if(this.state.view==='home') this.startHero(); else this.stopHero(); } }
+  componentWillUnmount(){ window.removeEventListener('scroll',this._onScroll); window.removeEventListener('pointermove',this._onMove); window.removeEventListener('pointerup',this._up); this.stopHero(); }
+
+  stopHero(){ cancelAnimationFrame(this._lampRaf); this._lampRaf=0;
+    if(this._heroMove&&this.heroRef.current){ this.heroRef.current.removeEventListener('pointermove',this._heroMove); }
+    if(this._gyro){ window.removeEventListener('deviceorientation',this._gyro); this._gyro=null; } }
+
+  startHero(){
+    this.stopHero();
+    const silk=this.silkRef.current;
+    if(silk && !this.reduced){ silk.classList.add('mug-silk-ripple'); }
+  }
+
+  go(v){ return ()=>{ this.setState({view:v}); window.scrollTo(0,0); }; }
+  set(p){ this.setState(p); }
+  waLink(text){ return 'https://wa.me/'+WA_NUMBER+'?text='+encodeURIComponent(text); }
+  hashId(str){ let h=0; for(let i=0;i<str.length;i++){h=(h*31+str.charCodeAt(i))>>>0;} return h.toString(36).toUpperCase().slice(0,5); }
+  waCfg(o){
+    const id=o.id||('MUG-'+this.hashId(`${o.name||''}|${o.fabric||''}|${o.body||''}|${o.border||''}|${o.motif||''}`));
+    const lines=['Namaste Mugdha! 🙏','I would like to reserve this saree.','',
+      o.name?`Name: ${o.name}`:null,`Saree ID: ${id}`,o.fabric?`Fabric: ${o.fabric}`:null,o.price?`Price: ${o.price}`:null,
+      o.body?`Body color: ${o.body}`:null,o.border?`Korvai border: ${o.border}`:null,o.motif?`Pallu motif: ${o.motif}`:null,
+      o.image?`Reference image: ${o.image}`:null,'','Please share price, customization and delivery options.'].filter(x=>x!==null);
+    return { id, link:'https://wa.me/'+WA_NUMBER+'?text='+encodeURIComponent(lines.join('\n')) };
+  }
+
+  burstPetals(kind){
+    const id=Date.now();
+    const items=Array.from({length:16}).map((_,i)=>({id:id+'-'+i,kind,
+      x:48+(Math.random()*30-15),y:46+(Math.random()*16-8),
+      dx:(Math.random()*260-130)+'px',dy:(-100-Math.random()*180)+'px',dr:(Math.random()*360-180)+'deg',delay:(Math.random()*0.12)+'s'}));
+    this.setState(s=>({petals:[...s.petals,...items],wish:kind==='petal'?s.wish+1:s.wish}));
+    setTimeout(()=>this.setState(s=>({petals:s.petals.filter(p=>items.indexOf(p)<0)})),1500);
+  }
+
+  motifLayer(motif){
+    const items=[]; const N=5;
+    for(let i=0;i<N;i++){ let node;
+      if(motif==='temple') node=R('span',{key:i,style:{width:'20px',height:'26px',background:PAL.gold,clipPath:'polygon(50% 0,100% 100%,0 100%)'}});
+      else if(motif==='buta') node=R('span',{key:i,style:{width:'18px',height:'27px',background:PAL.gold,borderRadius:'50% 50% 50% 0',transform:'rotate(45deg)',boxShadow:'inset 0 0 0 2px '+UI.oxblood}});
+      else node=R('span',{key:i,style:{width:'26px',height:'26px',borderRadius:'50%',background:PAL.gold,display:'flex',alignItems:'center',justifyContent:'center'}},
+        R('span',{style:{width:'15px',height:'15px',borderRadius:'50%',background:UI.peacock,display:'flex',alignItems:'center',justifyContent:'center'}},
+          R('span',{style:{width:'5px',height:'5px',borderRadius:'50%',background:PAL.gold}})));
+      items.push(node);
+    }
+    return R('div',{style:{position:'absolute',left:'10%',right:'10%',bottom:'9%',height:'14%',display:'flex',alignItems:'center',justifyContent:'space-around'}},items);
+  }
+  // Clean, true-color silk: a solid colour body lent real weave texture by the photo (soft-light),
+  // with the chosen fabric changing the actual weave used. Reads as fabric, recolours convincingly.
+  silkTexture(fabric){
+    const map={'Kanchipuram Silk':FABRIC_IMG['Designer Blend'],'Banarasi Silk':FABRIC_IMG['Kora Silk'],
+      'Mysore Silk':FABRIC_IMG['Crepe'],'Georgette':FABRIC_IMG['Georgette'],'Tussar':FABRIC_IMG['Tussar'],'Kora Silk':FABRIC_IMG['Chiffon']};
+    return map[fabric]||BASE_SILK;
+  }
+  buildSaree(body,border,motif,fabric){
+    const tex=this.silkTexture(fabric);
+    const weave=R('img',{src:tex,loading:'lazy',alt:'Silk weave',style:{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',mixBlendMode:'soft-light',opacity:.62,filter:'grayscale(1) contrast(1.15)'}});
+    const sheen=R('div',{style:{position:'absolute',inset:0,background:'linear-gradient(115deg, rgba(255,255,255,.32) 0%, rgba(255,255,255,0) 30%, rgba(0,0,0,0) 66%, rgba(0,0,0,.16) 100%)',pointerEvents:'none'}});
+    return R('div',{style:{position:'relative',width:'100%',paddingTop:'126%',overflow:'hidden',background:body,boxShadow:'inset 0 0 0 1px '+UI.goldH}},
+      weave,
+      // body zari dusting
+      R('div',{style:{position:'absolute',inset:0,backgroundImage:`radial-gradient(${PAL.gold} 1px, transparent 1.4px)`,backgroundSize:'34px 34px',backgroundPosition:'10px 12px',opacity:.32}}),
+      // korvai side borders (solid, true colour)
+      R('div',{style:{position:'absolute',top:0,bottom:0,left:0,width:'9%',background:border}}),
+      R('div',{style:{position:'absolute',top:0,bottom:0,left:'9%',width:'1.5px',background:PAL.gold}}),
+      R('div',{style:{position:'absolute',top:0,bottom:0,right:0,width:'9%',background:border}}),
+      R('div',{style:{position:'absolute',top:0,bottom:0,right:'9%',width:'1.5px',background:PAL.gold}}),
+      // pallu band
+      R('div',{style:{position:'absolute',left:0,right:0,bottom:0,height:'25%',background:border}}),
+      R('div',{style:{position:'absolute',left:0,right:0,bottom:'25%',height:'1.5px',background:PAL.gold}}),
+      this.motifLayer(motif),
+      sheen
+    );
+  }
+
+  buildKolam(stroke,size,dur,sw){
+    const S=size||120,c=S/2,kids=[],pet=8,D=dur||2.2,W=sw||1.6;
+    for(let i=0;i<pet;i++){const a=(i/pet)*Math.PI*2; const x=c+Math.cos(a)*c*0.42,y=c+Math.sin(a)*c*0.42;
+      kids.push(R('circle',{key:'k'+i,cx:x,cy:y,r:c*0.36,fill:'none',stroke,strokeWidth:W,
+        style:{strokeDasharray:S*2.4,strokeDashoffset:0,'--len':S*2.4,animation:this.reduced?'none':`mug-draw ${D}s ease ${i*(D*0.07)}s both`}}));}
+    kids.push(R('circle',{key:'kc',cx:c,cy:c,r:c*0.15,fill:'none',stroke,strokeWidth:W}));
+    for(let i=0;i<pet;i++){const a=(i/pet)*Math.PI*2; kids.push(R('circle',{key:'d'+i,cx:c+Math.cos(a)*c*0.8,cy:c+Math.sin(a)*c*0.8,r:2.2,fill:stroke}));}
+    return R('svg',{viewBox:`0 0 ${S} ${S}`,width:S,height:S,style:{display:'block'}},kids);
+  }
+
+  buildTempleBorder(color,h){
+    const H=h||10, pid='tb'+Math.round(Math.random()*1e6);
+    return R('svg',{width:'100%',height:H,style:{display:'block'}},
+      R('defs',null,R('pattern',{id:pid,width:16,height:H,patternUnits:'userSpaceOnUse'},
+        R('polygon',{points:`0,0 16,0 8,${H}`,fill:color}))),
+      R('rect',{width:'100%',height:H,fill:`url(#${pid})`}));
+  }
+  // A proper centred gopuram: a tiered, tapering temple tower drawn as one fine gold line,
+  // crowned with a kalasham finial. Sized as a tower (taller than wide), not a flat band.
+  buildGopuram(color){
+    const W=240, H=150, cx=W/2, tiers=5;
+    const bodyTop=42, tierH=(H-bodyTop)/tiers;
+    const halfAt=(i)=> 104 - (104-30)*(i/tiers);
+    let d=`M ${cx-halfAt(0)} ${H}`;
+    for(let i=0;i<tiers;i++){ const yTop=H-(i+1)*tierH;
+      d+=` L ${cx-halfAt(i)} ${yTop} L ${cx-halfAt(i+1)} ${yTop}`; }
+    d+=` L ${cx-halfAt(tiers)} ${bodyTop} L ${cx+halfAt(tiers)} ${bodyTop}`;
+    for(let i=tiers-1;i>=0;i--){ const yTop=H-(i+1)*tierH;
+      d+=` L ${cx+halfAt(i+1)} ${yTop} L ${cx+halfAt(i)} ${yTop}`; }
+    d+=` L ${cx+halfAt(0)} ${H} Z`;
+    const tierLines=[]; for(let i=1;i<tiers;i++){ const y=H-i*tierH; tierLines.push(R('line',{key:'t'+i,x1:cx-halfAt(i),y1:y,x2:cx+halfAt(i),y2:y,stroke:color,strokeWidth:.7,opacity:.5})); }
+    return R('svg',{viewBox:`0 0 ${W} ${H}`,width:W,height:H,style:{display:'block'}},
+      R('path',{d,fill:'none',stroke:color,strokeWidth:1.1,opacity:.85,strokeLinejoin:'round'}),
+      ...tierLines,
+      R('line',{x1:cx,y1:bodyTop,x2:cx,y2:24,stroke:color,strokeWidth:1.1}),
+      R('path',{d:`M ${cx-7} 24 Q ${cx} 14 ${cx+7} 24`,fill:'none',stroke:color,strokeWidth:1.1}),
+      R('line',{x1:cx,y1:14,x2:cx,y2:4,stroke:color,strokeWidth:1.1}),
+      R('circle',{cx,cy:3,r:2.4,fill:color}));
+  }
+  // a fine gold kolam that self-draws at a section threshold
+  kolamThreshold(color){ return R('div',{style:{display:'flex',justifyContent:'center',padding:'0'}}, this.buildKolam(color,72,3.4,1)); }
+  buildThread(color){
+    const kids=[];
+    for(let i=0;i<9;i++){ const y=22+i*22; kids.push(R('rect',{key:'w'+i,x:10,y,width:260,height:9,rx:4,fill:i%2?color:PAL.gold,opacity:i%2?.9:.7,
+      style:{transformOrigin:`140px ${y+4}px`,animation:this.reduced?'none':`mug-float ${3+i*0.2}s ease-in-out ${i*0.1}s infinite`}})); }
+    for(let i=0;i<12;i++){ const x=18+i*22; kids.push(R('rect',{key:'wp'+i,x,y:14,width:8,height:212,rx:4,fill:'rgba(255,248,240,.16)'})); }
+    return R('svg',{viewBox:'0 0 280 240',width:'100%',style:{maxWidth:'320px',display:'block'}},kids);
+  }
+
+  renderVals(){
+    const s=this.state, sp=s.scrollP;
+    const wordmarkColor='#2C1B20';
+    const headerBg=sp>0.04?'rgba(245,239,230,.94)':'rgba(245,239,230,.4)';
+    const T = L[s.lang] || L.en;
+    const navMap=[['sarees','navSarees'],['fabrics','navFabrics'],['bridal','navBridal'],['studio','navStudio'],['ar','navAr'],['stores','navStores']];
+    const navItems=navMap.map(([v,key])=>({label:T[key],go:this.go(v),color:s.view===v?'#6A1E24':'#2C1B20',weight:s.view===v?600:400}));
+    const langButtons=[['en','EN'],['ta','த'],['te','తె'],['hi','हि']].map(([code,label])=>({code,label,sel:s.lang===code,pick:()=>this.set({lang:code}),
+      bg:s.lang===code?'#1A0E1B':'transparent',fg:s.lang===code?'#FFF8F0':'#1A0E1B'}));
+    const tk=['உத்ஸவ் UTSAV','✦','NEW DROPS EVERY FRIDAY','✦','SILK MARK CERTIFIED','✦','PURE ZARI','✦','ఆర్డర్ ఆన్ వాట్సాప్','✦','WOVEN IN HOUSE','✦','25+ STORES','✦'];
+    const mkTick=(pre)=>tk.map((t,i)=>R('span',{key:pre+i,style:{color:i%2?'#C9A227':'#FFF8F0'}},t));
+
+    // ---- Find your drape: live facet filter over the real catalogue ----
+    const findExclude=['Rani Pink Georgette Saree Paisley Buttas Elephant Border'];
+    const FIND = getCatalogue().filter(p=>findExclude.indexOf(p.name)<0);
+    const fFacets = catFacets();
+    const colorOf = {}; (fFacets.colors||[]).forEach(c=>colorOf[c.name]=c.swatch);
+    const fabOpts = ['Any', ...((fFacets.fabrics&&fFacets.fabrics.length)?fFacets.fabrics:['Georgette','Semi Silk','Pure Silk','Mashru Silk','Silk','Satin'])];
+    const colOpts = ['Any', ...((fFacets.colors&&fFacets.colors.length)?fFacets.colors.map(c=>c.name):['Pink','Red','Yellow','Blue','Green','Purple'])];
+    const motifOpts = [['Any','Any'],['peacock','Peacock'],['buta','Mango buta'],['temple','Temple']];
+    const selFab=s.cFabric, selCol=s.cColor, selBorder=s.cBorder, selMotif=s.cMotif;
+    const chipSel='#6A1E24', chipSelFg='#F5EFE6', chipBd='rgba(168,136,78,.5)', chipFg='#E9DCC9';
+    const findFabrics = fabOpts.map(f=>({name:f, sel:selFab===f, pick:()=>this.set({cFabric:f}),
+      bd:selFab===f?chipSel:chipBd, bg:selFab===f?chipSel:'transparent', fg:selFab===f?chipSelFg:chipFg}));
+    const findColors = colOpts.map(cn=>({name:cn, dot:cn==='Any'?'transparent':(colorOf[cn]||'#888'), sel:selCol===cn, pick:()=>this.set({cColor:cn}),
+      bd:selCol===cn?chipSel:chipBd, bg:selCol===cn?chipSel:'transparent', fg:selCol===cn?chipSelFg:chipFg}));
+    const findBorders = colOpts.map(cn=>({name:cn, dot:cn==='Any'?'transparent':(colorOf[cn]||'#888'), sel:selBorder===cn, pick:()=>this.set({cBorder:cn}),
+      bd:selBorder===cn?chipSel:chipBd, bg:selBorder===cn?chipSel:'transparent', fg:selBorder===cn?chipSelFg:chipFg}));
+    const findMotifs = motifOpts.map(([id,label])=>({id,label, sel:selMotif===id, pick:()=>this.set({cMotif:id}),
+      bd:selMotif===id?chipSel:chipBd, bg:selMotif===id?chipSel:'transparent', fg:selMotif===id?chipSelFg:chipFg}));
+    const anySel = !(selFab==='Any'&&selCol==='Any'&&selBorder==='Any'&&selMotif==='Any');
+    const scoreP=(p)=>{ let sc=0;
+      if(selFab!=='Any'&&p.fabric===selFab) sc+=3;
+      if(selCol!=='Any'&&p.color===selCol) sc+=3;
+      if(selMotif!=='Any'&&p.motif===selMotif) sc+=2;
+      if(selBorder!=='Any'&&p.color===selBorder) sc+=1; return sc; };
+    const isExact=(p)=>(selFab==='Any'||p.fabric===selFab)&&(selCol==='Any'||p.color===selCol)&&(selMotif==='Any'||p.motif===selMotif);
+    let matchList, findExact;
+    if(!anySel){ matchList=FIND.slice(0,4); findExact=true; }
+    else { const ex=FIND.filter(isExact);
+      if(ex.length){ matchList=ex.slice(0,4); findExact=true; }
+      else { matchList=FIND.map(p=>({p,sc:scoreP(p)})).sort((a,b)=>b.sc-a.sc).slice(0,4).map(x=>x.p); findExact=false; } }
+    const findWa=(p)=>'https://wa.me/'+WA_NUMBER+'?text='+encodeURIComponent(`Hi Mugdha, I am interested in this saree: ${p.name}, ${p.fabric}, product ${p.id}. ${p.img}. Is it available and what is the price?`);
+    const findHeading = !anySel ? 'A few from the house' : (findExact ? 'Your matches' : 'Nothing exact, but these are close');
+    const findResults = matchList.map(p=>({ name:p.name, fabric:p.fabric, price:fmtINR(p.price), img:p.img, id:p.id, open:()=>this.setState({selProd:p,view:'product'},()=>window.scrollTo(0,0)), wa:findWa(p) }));
+    const findReset = ()=>this.set({cFabric:'Any',cColor:'Any',cBorder:'Any',cMotif:'Any'});
+
+    const _catTiles = getCatalogue();
+    const firstByFabric=(f)=>{const m=_catTiles.find(p=>p.fabric===f); return m?m.img:FABRIC_IMG['Chiffon'];};
+    const countByFabric=(f)=>_catTiles.filter(p=>p.fabric===f).length;
+    const goFabric=(f)=>()=>this.setState({sareeFab:f,sareeColor:'All',view:'sarees'},()=>window.scrollTo(0,0));
+    const scripts={'Georgette':'जॉर्जेट','Semi Silk':'सेमी','Pure Silk':'பட்டு','Mashru Silk':'मश्रू','Silk':'पट्टु','Satin':'साटन','Khaddi Georgette':'खद्दी'};
+    const pos=[{gc:'1',gr:'1 / span 2'},{gc:'2 / span 2',gr:'1'},{gc:'2',gr:'2'},{gc:'3',gr:'2'},{gc:'1 / span 2',gr:'3'},{gc:'3',gr:'3'}];
+    const pickImg={'Semi Silk':'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1774610415397__1774610414612__6.jpg','Pure Silk':'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1772447691560__1772447690715__633042_047-213864-1.jpg.jpeg'};
+    const topFabrics=(catFacets().fabrics||[]).filter(f=>f!=='Satin').slice(0,5);
+    const tileSrc = topFabrics.length?topFabrics:['Georgette','Semi Silk','Pure Silk','Mashru Silk','Silk'];
+    const fabricTiles=tileSrc.map((name,i)=>({name, script:scripts[name]||'', b:PAL.gold, gc:pos[i%pos.length].gc, gr:pos[i%pos.length].gr,
+      sub:countByFabric(name)+' sarees', img:pickImg[name]||firstByFabric(name), open:goFabric(name)}));
+
+    const cat = getCatalogue();
+    const firstByColor=(col)=>{const m=cat.find(p=>p.color===col); return m?m.img:FABRIC_IMG['Chiffon'];};
+    const countByColor=(col)=>cat.filter(p=>p.color===col).length;
+    const openProd=(prod)=>this.setState({selProd:prod,view:'product'},()=>window.scrollTo(0,0));
+    const goColor=(col)=>()=>this.setState({sareeColor:col,sareeFab:'All',view:'sarees'},()=>window.scrollTo(0,0));
+    const colorPickImg={
+      'Pink':'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1774439658042__1774439657224__6.jpg',
+      'Yellow':'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1772447691560__1772447690715__633042_047-213864-1.jpg.jpeg',
+      'Blue':'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1775134990618__1775134989827__6.jpg'
+    };
+    const moodStories=[
+      {name:'Pink',color:'Pink'},{name:'Red',color:'Red'},{name:'Yellow',color:'Yellow'},
+      {name:'Blue',color:'Blue'},{name:'Green',color:'Green'},{name:'Purple',color:'Purple'}
+    ].map(m=>({name:m.name, sub:(countByColor(m.color)||0)+' sarees', img:colorPickImg[m.color]||firstByColor(m.color), go:goColor(m.color)}));
+
+    // New drops: the freshest real pieces from the catalogue (excluding a couple by request)
+    const dropSkip=['Rani Pink Georgette Saree Paisley Buttas Elephant Border','Light Gold Pure Silk Saree Rich Diamond Zari Pallu','Lavender Semi Silk Saree Floral Bird Print Blue Border'];
+    const dropPicks=cat.filter(p=>dropSkip.indexOf(p.name)<0).slice(0,5);
+    const s15=cat.find(p=>p.name==='Sky Blue Semi Silk Saree Paithani Peacock Border');
+    const drops=[...dropPicks, s15].filter(Boolean).map(p=>({name:p.name, fab:p.fabric, price:fmtINR(p.price), img:p.img,
+      tag: p.offer>0?'Offer':'New', tagColor:PAL.pink, open:()=>openProd(p), wa:this.waCfg({name:p.name,fabric:p.fabric,price:fmtINR(p.price),image:p.img,id:p.id}).link}));
+
+    const weaveData={
+      'Kanchipuram':{tamil:'காஞ்சி',body:'Mulberry silk, korvai contrast border, real zari. Three shuttles, one weaver, weeks on the loom.',color:PAL.pink,days:'18 to 30 days'},
+      'Banarasi':{tamil:'बनारस',body:'Mughal jaal and meenakari brocade from the lanes of Varanasi. Gold and silver zari floats.',color:PAL.marigold,days:'15 to 25 days'},
+      'Mysore':{tamil:'ಮೈಸೂರು',body:'Feather light pure crepe silk with a soft sheen and a slim gold edge. The everyday drape.',color:PAL.teal,days:'6 to 10 days'}
+    };
+    const weaveTabs=Object.keys(weaveData).map(k=>{const sel=s.weave===k;return {k,sel,bg:sel?'rgba(201,162,39,.16)':'transparent',fg:sel?'#E9C766':'rgba(245,239,230,.72)',bd:sel?'#C9A227':'rgba(201,162,39,.35)',pick:()=>this.set({weave:k})};});
+    const wv=weaveData[s.weave];
+
+    const brides=[{name:'Aishwarya',city:'Hyderabad',a:PAL.pink,b:PAL.teal},{name:'Meera',city:'Chennai',a:PAL.violet,b:PAL.marigold},{name:'Divya',city:'Bengaluru',a:PAL.red,b:PAL.gold},{name:'Sahana',city:'Vijayawada',a:PAL.green,b:PAL.pink}];
+    const marks=[{t:'Silk Mark',s:'Certified pure silk',c:PAL.pink,icon:'✓'},{t:'Pure Zari',s:'Tested gold and silver',c:PAL.gold,icon:'❋'},{t:'Woven in house',s:'Mugdha Art Studio',c:PAL.teal,icon:'⚜'},{t:'WhatsApp order',s:'Reserve in seconds',c:PAL.green,icon:'➤'}];
+    const stores=[{city:'Hyderabad',n:11},{city:'Bengaluru',n:6},{city:'Chennai',n:4},{city:'Vijayawada',n:3},{city:'Visakhapatnam',n:2}];
+
+    const petalLayer=s.petals.length?R('div',{style:{position:'fixed',inset:0,zIndex:90,pointerEvents:'none'}},
+      s.petals.map(p=>R('div',{key:p.id,style:{position:'absolute',left:p.x+'%',top:p.y+'%',width:'16px',height:'16px',
+        background:p.kind==='gulal'?PAL.pink:PAL.marigold,borderRadius:p.kind==='gulal'?'50%':'50% 0 50% 50%',
+        animation:`mug-petal 1.4s ease-out ${p.delay} forwards`,'--dx':p.dx,'--dy':p.dy,'--dr':p.dr}}))):null;
+
+    const openProduct=(p)=>this.setState({selProd:p, view:'product'}, ()=>window.scrollTo(0,0));
+    const ctx={ self:this, PAL, R, s, buildSaree:this.buildSaree.bind(this), buildKolam:this.buildKolam.bind(this), buildTempleBorder:this.buildTempleBorder.bind(this),
+      go:this.go.bind(this), set:this.set.bind(this), waLink:this.waLink.bind(this), waCfg:this.waCfg.bind(this), burst:this.burstPetals.bind(this),
+      bodySwatches:findColors, borderSwatches:findBorders, FABRIC_IMG, PRODUCTS:getCatalogue(), facets:catFacets(), fmtINR, openProduct, reduced:this.reduced,
+      findFabrics, findColors, findBorders, findMotifs, findResults, findHeading, findReset, findExact, findActive:anySel };
+
+    const heroTitleNode = s.lang==='en'
+      ? R(React.Fragment,null,'Timeless South Indian ',R('span',{style:{position:'relative',display:'inline-block'}},'elegance',R('span',{style:{position:'absolute',left:0,right:0,bottom:'.03em',height:'.07em',background:PAL.gold}})))
+      : T.heroTitle;
+    const copyDetails=()=>{};
+    const closeCard=()=>this.set({showCard:false});
+    const shareCardNode = null;
+
+    const isHome=s.view==='home';
+    const otherView=isHome?null:PAGES[s.view](ctx);
+
+    return {
+      rootRef:this.rootRef, goHome:this.go('home'), goStudio:this.go('studio'), goFabrics:this.go('fabrics'),
+      goBridal:this.go('bridal'), goAr:this.go('ar'), goStores:this.go('stores'), goQuiz:this.go('quiz'),
+      wordmarkColor, headerBg, navItems, tickerA:mkTick('a'), tickerB:mkTick('b'),
+      toggleSound:()=>this.set({soundOn:!s.soundOn}), soundIcon:s.soundOn?'♪':'♪', soundBg:s.soundOn?PAL.marigold:'transparent',
+      wishCount:s.wish, waMain:this.waLink('Hi Mugdha! I want to explore your sarees.'),
+      isHome, heroImg:HERO_SILK, editorialImg:EDITORIAL_SILK,
+      heroLabel:sectionLabel(T.heroLabel,'#A8884E'), heroTitle:heroTitleNode, heroSub:T.heroSub,
+      ctaExplore:T.ctaExplore, ctaDesign:T.ctaDesign, ctaReserve:T.ctaReserve,
+      secFabricTitle:T.secFabric, secMoodTitle:T.secMood, secDesignTitle:T.secDesign, secDropsTitle:T.secDrops,
+      langButtons,
+      bnHomeGo:this.go('home'), bnSearchGo:this.go('fabrics'), bnDesignGo:this.go('studio'), bnWishGo:this.go('studio'),
+      lblHome:T.bnHome, lblSearch:T.bnSearch, lblDesign:T.bnDesign, lblWish:T.bnWishlist,
+      cHome:s.view==='home'?'#FFB100':'rgba(255,248,240,.66)', cSearch:s.view==='fabrics'?'#FFB100':'rgba(255,248,240,.66)', cDesign:s.view==='studio'?'#FFB100':'rgba(255,248,240,.66)',
+      shareCard:shareCardNode,
+      heroKolam:this.buildKolam('#A8884E',150,5,1), templeBorder:this.buildTempleBorder('#A8884E',8),
+      heroRef:this.heroRef, lampRef:this.lampRef, silkRef:this.silkRef,
+      gopuramGold:this.buildGopuram(UI.lampGold,1200),
+      kolamGoldT:this.kolamThreshold(UI.lampGold), kolamMuteT:this.kolamThreshold('#A8884E'),
+      templeRuleGold:this.buildTempleBorder('#A8884E',7),
+      fabricLabel:sectionLabel('The house weaves','#A8884E'), moodLabel:sectionLabel('Shop by color','#A8884E'),
+      dropsLabel:sectionLabel('Newly on the loom','#A8884E'), craftLabel:sectionLabel('The making','#A8884E'),
+      bridesLabel:sectionLabel('The bridal world','#A8884E'), storesLabel:sectionLabel('Visit the house','#C9A227'),
+      fabricTiles,
+      moodStories,
+      fabricList:findFabrics, findFabrics, findColors, findBorders, findMotifs, findResults, findHeading,
+      findReset, findExact, findActive:anySel,
+      secDesignEyebrow:'The house atelier · matched to real silk',
+      saveCard:()=>{}, savedCard:s.savedCard, waCustom:'',
+      dropCountdown:'2d 14h', drops,
+      weaveTabs, weaveTamil:wv.tamil, weaveBody:wv.body, weaveColor:wv.color, weaveDays:wv.days, weaveThread:this.buildThread(wv.color),
+      weaveScene:R('div',{style:{position:'relative',overflow:'hidden',aspectRatio:'4/5'}},
+        R('img',{src:({Kanchipuram:HERO_SILK,Banarasi:FABRIC_IMG['Kora Silk'],Mysore:FABRIC_IMG['Crepe']})[s.weave],loading:'lazy',alt:wv.tamil+' silk',style:{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 32%',filter:'saturate(1.18) brightness(1.06)'}})),
+      bridalSaree:R('div',{style:{width:'230px',animation:this.reduced?'none':'mug-float 6s ease-in-out infinite'}},this.buildSaree(PAL.red,PAL.gold,'temple')),
+      brides, marks, stores,
+      joinBurst:()=>this.burstPetals('gulal'),
+      kolamPink:this.buildKolam(PAL.pink,130), kolamGold:this.buildKolam(PAL.gold,130), kolamTeal:this.buildKolam(PAL.teal,140),
+      footerEl:FOOTER(ctx),
+      otherView, petalLayer
+    };
+  }
+}
+
+// ---------------- SECONDARY PAGES (createElement) ----------------
+function H(txt,size,extra){return R('h2',{style:Object.assign({margin:0,fontFamily:"'Cormorant Garamond',serif",fontWeight:400,fontSize:size||'46px',lineHeight:1.08,color:'#2C1B20'},extra||{})},txt);}
+function pill(label,bg,color,onClick,extra){return R('button',{onClick,style:Object.assign({border:'1px solid '+UI.goldH,cursor:'pointer',background:bg,color,fontFamily:"'General Sans'",fontWeight:500,letterSpacing:'.02em',fontSize:'14px',padding:'12px 24px',borderRadius:'2px'},extra||{})},label);}
+function alink(label,href,bg,color,extra){return R('a',{href,target:'_blank',rel:'noopener',style:Object.assign({textDecoration:'none',display:'inline-flex',alignItems:'center',gap:'8px',border:'1px solid '+UI.goldH,background:bg,color,fontFamily:"'General Sans'",fontWeight:500,letterSpacing:'.02em',fontSize:'14px',padding:'13px 24px',borderRadius:'2px'},extra||{})},label);}
+function wrap(children,extra){return R('div',{style:Object.assign({maxWidth:'1320px',margin:'0 auto',padding:'0 26px'},extra||{})},children);}
+
+function FOOTER(c){
+  const {PAL}=c;
+  return R('footer',{style:{background:'#1A0E1B',color:'#FFF8F0',padding:'0 0 30px'}},
+    R('div',{style:{lineHeight:0,marginBottom:'40px'}},c.buildTempleBorder(PAL.gold,12)),
+    wrap(R('div',{className:'mug-g4',style:{display:'grid',gridTemplateColumns:'1.4fr 1fr 1fr 1fr',gap:'30px',alignItems:'flex-start'}},
+      R('div',null,
+        R('div',{style:{fontFamily:"'Clash Display'",fontWeight:700,fontSize:'30px',color:'#FFF8F0'}},'MUGDHA'),
+        R('div',{style:{fontFamily:"'Noto Serif Devanagari'",color:'#C9A227',marginTop:'4px'}},'उत्सव · the saree house'),
+        R('p',{style:{color:'rgba(255,248,240,.6)',maxWidth:'34ch',marginTop:'12px',fontSize:'14px'}},'Mugdha Art Studio. Creative Director Sashi Vangapalli. Silk Mark certified, pure zari, woven in house.')),
+      footCol('House',['Our story','Sashi Vangapalli','The studio','Journal']),
+      footCol('Shop',['Sarees','Fabrics','Bridal','Design Studio','New drops']),
+      footCol('Connect',['WhatsApp','Instagram','Stores','Appointments'])
+    )),
+    wrap(R('div',{style:{height:'1px',background:'rgba(168,136,78,.4)',marginTop:'42px'}})),
+    wrap(R('div',{style:{marginTop:'18px',color:'rgba(255,248,240,.45)',fontSize:'13px'}},'© 2026 Mugdha Art Studio. Order on WhatsApp · Made for the utsav.'))
+  );
+}
+function footCol(title,items){return R('div',null,R('div',{style:{fontWeight:600,fontSize:'13px',letterSpacing:'.12em',textTransform:'uppercase',color:'#FFB100',marginBottom:'12px'}},title),
+  items.map(it=>R('div',{key:it,style:{color:'rgba(255,248,240,.72)',fontSize:'14.5px',padding:'5px 0',cursor:'pointer'}},it)));}
+
+function pageHead(c, accent, label, title, sub){
+  return R('section',{style:{background:'#1A0E1B',color:'#FFF8F0',padding:'54px 0 46px',position:'relative',overflow:'hidden'}},
+    R('div',{style:{position:'absolute',inset:0,background:`radial-gradient(120% 90% at 80% 0%, ${accent}40, transparent 60%)`}}),
+    wrap(R('div',{style:{position:'relative',zIndex:2}},
+      sectionLabel(label,accent),
+      R('h1',{style:{margin:'16px 0 12px',fontFamily:"'Cormorant Garamond',serif",fontWeight:400,fontSize:'clamp(38px,5vw,68px)',lineHeight:1.04,letterSpacing:'.004em'}},title),
+      R('p',{style:{margin:0,maxWidth:'52ch',fontSize:'16px',lineHeight:1.7,color:'rgba(245,239,230,.7)'}},sub)
+    ))
+  );
+}
+
+const PAGES = {
+  sarees(c){
+    const {PAL,s}=c;
+    const fctFabs=(c.facets.fabrics&&c.facets.fabrics.length)?c.facets.fabrics:['Georgette','Semi Silk','Pure Silk','Mashru Silk','Silk','Satin','Khaddi Georgette'];
+    const fabs=['All',...fctFabs];
+    const colorFacets=(c.facets.colors&&c.facets.colors.length)?c.facets.colors:[];
+    const active=s.sareeFab||'All';
+    const activeColor=s.sareeColor||'All';
+    const list=c.PRODUCTS.filter(p=>(active==='All'||p.fabric===active)&&(activeColor==='All'||p.color===activeColor));
+    const chips=fabs.map(f=>{const sel=active===f;return R('button',{key:f,onClick:()=>c.set({sareeFab:f}),style:{border:'1px solid '+(sel?'#6A1E24':'rgba(168,136,78,.5)'),background:sel?'#6A1E24':'transparent',color:sel?'#F5EFE6':'#4A2740',cursor:'pointer',fontWeight:500,letterSpacing:'.03em',fontSize:'13.5px',padding:'9px 16px',borderRadius:'2px'}},f);});
+    const colorChips=[{name:'All',swatch:null},...colorFacets].map(cf=>{const sel=activeColor===cf.name;
+      return R('button',{key:cf.name,onClick:()=>c.set({sareeColor:cf.name}),title:cf.name,style:{display:'inline-flex',alignItems:'center',gap:'7px',border:'1px solid '+(sel?'#2C1B20':'rgba(168,136,78,.5)'),background:sel?'rgba(44,27,32,.06)':'transparent',color:'#2C1B20',cursor:'pointer',fontWeight:500,fontSize:'13px',padding:'7px 13px',borderRadius:'2px'}},
+        cf.swatch?R('span',{style:{width:'13px',height:'13px',borderRadius:'50%',background:cf.swatch,boxShadow:'inset 0 0 0 1px rgba(0,0,0,.15)'}}):null, cf.name);});
+    const cards=list.map(p=>R('button',{key:p.id,onClick:()=>c.openProduct(p),className:'mug-zoom',style:{border:0,background:'none',cursor:'pointer',padding:0,textAlign:'left',display:'block'}},
+      R('span',{style:{position:'relative',display:'block',overflow:'hidden',aspectRatio:'4/5',boxShadow:'inset 0 0 0 1px rgba(168,136,78,.4)'}},
+        R('img',{src:p.img,loading:'lazy',alt:p.name,style:{width:'100%',height:'100%',objectFit:'cover'}}),
+        R('span',{className:'mug-view',style:{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',background:'rgba(30,16,22,.22)'}},
+          R('span',{style:{color:'#F5EFE6',fontSize:'12px',letterSpacing:'.18em',textTransform:'uppercase',borderBottom:'1px solid #F5EFE6',paddingBottom:'3px'}},'View'))),
+      R('span',{style:{display:'flex',alignItems:'baseline',justifyContent:'space-between',gap:'12px',marginTop:'15px'}},
+        R('span',{style:{fontFamily:"'Cormorant Garamond',serif",fontWeight:500,fontSize:'19px',color:'#2C1B20',lineHeight:1.18}},p.name),
+        R('span',{style:{fontSize:'13.5px',fontWeight:300,color:'#2C1B20',whiteSpace:'nowrap'}},c.fmtINR(p.price))),
+      R('span',{style:{display:'block',fontSize:'12.5px',letterSpacing:'.03em',color:'#8B7A73',marginTop:'4px'}},p.fabric)));
+    const total=c.PRODUCTS.length;
+    return R('div',null,
+      pageHead(c,PAL.gold,'The saree house','Every drape, ready to wear',total+' sarees across the house weaves, each Silk Mark certified with pure zari. Filter by fabric and colour, then reserve on WhatsApp.'),
+      R('section',{style:{background:'#F5EFE6'}},wrap(R('div',{style:{padding:'34px 0 4px'}},
+        R('div',{style:{display:'flex',gap:'9px',flexWrap:'wrap',alignItems:'center',marginBottom:'14px'}},
+          R('span',{style:{fontSize:'11px',letterSpacing:'.22em',textTransform:'uppercase',color:'#A8884E',width:'58px'}},'Fabric'),
+          ...chips,
+          R('span',{style:{flex:1}}),
+          R('span',{style:{fontSize:'13px',color:'#8B7A73',whiteSpace:'nowrap'}},list.length+' sarees')),
+        R('div',{style:{display:'flex',gap:'9px',flexWrap:'wrap',alignItems:'center'}},
+          R('span',{style:{fontSize:'11px',letterSpacing:'.22em',textTransform:'uppercase',color:'#A8884E',width:'58px'}},'Colour'),
+          ...colorChips)))),
+      R('section',{style:{background:'#F5EFE6'}},wrap(R('div',{className:'mug-g3',style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'46px 36px',padding:'28px 0 104px'}},cards)))
+    );
+  },
+
+  fabrics(c){
+    const {PAL,s}=c;
+    const cat=c.PRODUCTS;
+    const fabFacets=(c.facets.fabrics&&c.facets.fabrics.length)?c.facets.fabrics:['Georgette','Semi Silk','Pure Silk','Mashru Silk','Silk','Satin','Khaddi Georgette'];
+    const fabPickImg={'Semi Silk':'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1774610415397__1774610414612__6.jpg','Pure Silk':'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1772447691560__1772447690715__633042_047-213864-1.jpg.jpeg'};
+    const firstByFabric=(f)=>{ if(fabPickImg[f]) return fabPickImg[f]; const m=cat.find(p=>p.fabric===f);return m?m.img:c.FABRIC_IMG['Chiffon'];};
+    const cntByFabric=(f)=>cat.filter(p=>p.fabric===f).length;
+    const lo=(f)=>{const a=cat.filter(p=>p.fabric===f).map(p=>p.price);return a.length?Math.min(...a):0;};
+    const goFab=(f)=>()=>c.set({sareeFab:f,sareeColor:'All',view:'sarees'});
+    const cards=fabFacets.map(f=>R('button',{key:f,onClick:goFab(f),className:'mug-zoom',style:{border:0,background:'none',cursor:'pointer',padding:0,textAlign:'left',display:'block'}},
+      R('span',{style:{position:'relative',display:'block',overflow:'hidden',aspectRatio:'4/5',boxShadow:'inset 0 0 0 1px rgba(168,136,78,.4)'}},
+        R('img',{src:firstByFabric(f),loading:'lazy',alt:f,style:{width:'100%',height:'100%',objectFit:'cover'}}),
+        R('span',{className:'mug-view',style:{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',background:'rgba(30,16,22,.22)'}},
+          R('span',{style:{color:'#F5EFE6',fontSize:'12px',letterSpacing:'.18em',textTransform:'uppercase',borderBottom:'1px solid #F5EFE6',paddingBottom:'3px'}},'View'))),
+      R('span',{style:{display:'flex',alignItems:'baseline',justifyContent:'space-between',gap:'10px',marginTop:'15px'}},
+        R('span',{style:{fontFamily:"'Cormorant Garamond',serif",fontWeight:500,fontSize:'24px',color:'#2C1B20'}},f),
+        R('span',{style:{fontSize:'13px',color:'#8B7A73'}},cntByFabric(f)+' sarees')),
+      R('span',{style:{display:'block',fontSize:'12.5px',color:'#8B7A73',marginTop:'4px'}},'From '+c.fmtINR(lo(f)))));
+    return R('div',null,
+      pageHead(c,PAL.teal,'By the metre','The house fabrics','Georgette, Mashru, pure silk and more. Choose a weave to see every saree woven in it, then reserve on WhatsApp.'),
+      R('section',{style:{background:'#F5EFE6'}},wrap(R('div',{className:'mug-g3',style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'48px 36px',padding:'44px 0 104px'}},cards)))
+    );
+  },
+
+  product(c){
+    const {PAL,s}=c; const acc=['weave','karigar','authenticity','care'];
+    const p = s.selProd || {name:'Rani Korvai Kanjivaram', fabric:'Kanchipuram Silk', price:24500, img:c.FABRIC_IMG['Designer Blend'], motif:'peacock', id:'MUG-1014'};
+    const priceStr = c.fmtINR(p.price);
+    const accData={weave:['The weave','Korvai contrast border joined by three interlocked shuttles. The peacock pallu, மயில், signals grace and the rains.'],
+      karigar:['The karigar','Woven by a master weaver in Kanchipuram. 24 days on the loom, one drape, signed at the selvedge.'],
+      authenticity:['Authenticity','Silk Mark certified. Zari acid tested for pure gold and silver. Certificate travels in the box.'],
+      care:['Care and exchange','Dry clean only, wrap in muslin, air once a month. 7 day exchange, lifetime re polishing of zari.']};
+    return R('div',null,
+      R('section',{style:{padding:'30px 0'}},wrap(R('div',{className:'mug-col2',style:{display:'grid',gridTemplateColumns:'1.05fr .95fr',gap:'40px'}},
+        R('div',null,
+          R('div',{style:{position:'relative',overflow:'hidden',aspectRatio:'4/5',boxShadow:'inset 0 0 0 1px rgba(168,136,78,.4)'}},
+            R('img',{src:p.img,loading:'lazy',alt:p.name,style:{width:'100%',height:'100%',objectFit:'cover'}})),
+          R('div',{style:{display:'flex',gap:'10px',marginTop:'14px',alignItems:'center'}},
+            pill('Recolour this','#6A1E24','#F5EFE6',c.go('studio'),{border:'1px solid rgba(168,136,78,.5)'}),
+            pill('Drape it on me','transparent','#2C1B20',c.go('ar'),{border:'1px solid rgba(168,136,78,.5)'}))),
+        R('div',null,
+          R('div',{style:{fontFamily:"'Noto Serif Tamil'",color:'#A8884E',fontSize:'18px',letterSpacing:'.04em'}},'காஞ்சி'),
+          H(p.name,'40px',{marginTop:'6px'}),
+          R('div',{style:{display:'flex',alignItems:'baseline',gap:'12px',margin:'12px 0 6px',flexWrap:'wrap'}},
+            R('span',{style:{fontWeight:300,fontSize:'24px',color:'#2C1B20'}},priceStr),
+            R('span',{style:{color:'#8B7A73',fontSize:'14px'}},p.fabric+' · pure zari'),
+            R('span',{style:{fontFamily:'monospace',fontSize:'11px',color:'#A8884E'}},p.id)),
+          R('p',{style:{color:'#4A2740',fontSize:'16px',lineHeight:1.7,maxWidth:'46ch'}},'A '+p.fabric.toLowerCase()+' drape held by a korvai contrast border, finished with a '+p.motif+' pallu. One of one, Silk Mark certified.'),
+          R('div',{style:{display:'flex',gap:'10px',flexWrap:'wrap',margin:'22px 0 18px'}},
+            alink('Reserve on WhatsApp',c.waCfg({name:p.name,fabric:p.fabric,price:priceStr,motif:p.motif,image:p.img,id:p.id}).link,PAL.green,'#fff',{fontSize:'15px',padding:'15px 22px'}),
+            pill('❀ Wishlist','transparent','#6A1E24',()=>c.burst('petal'),{border:'1px solid #6A1E24',fontSize:'15px',padding:'15px 22px'})),
+          R('div',{style:{display:'flex',flexWrap:'wrap',gap:'8px',margin:'2px 0 16px'}},
+            [['◆ Silk Mark',PAL.pink],['↺ 7-day returns',PAL.teal],['⛨ Insured shipping',PAL.violet],['UPI · Cards · COD',PAL.green]].map((tr,i)=>
+              R('span',{key:i,style:{display:'inline-flex',alignItems:'center',gap:'6px',background:'#FFF1D6',color:'#4A2740',fontWeight:600,fontSize:'12.5px',padding:'7px 12px',borderRadius:'20px',borderLeft:'3px solid '+tr[1]}},tr[0]))),
+          R('div',{style:{borderTop:'1px solid rgba(26,14,27,.12)',marginTop:'10px'}},
+            acc.map(k=>R('div',{key:k,style:{borderBottom:'1px solid rgba(26,14,27,.12)'}},
+              R('button',{onClick:()=>c.set({accOpen:s.accOpen===k?'':k}),style:{width:'100%',border:0,background:'none',cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center',padding:'16px 2px',fontFamily:"'General Sans'",fontWeight:600,fontSize:'16px',color:'#1A0E1B'}},
+                R('span',null,accData[k][0]),R('span',{style:{color:PAL.pink}},s.accOpen===k?'–':'+')),
+              s.accOpen===k?R('p',{style:{margin:'0 2px 16px',color:'#4A2740',fontSize:'15px',maxWidth:'48ch'}},accData[k][1]):null)))
+        )
+      ))),
+      R('section',{style:{background:'#ECE2D2',padding:'72px 0'}},wrap(R('div',null,
+        sectionLabel('Complete the look','#A8884E'),
+        R('div',{className:'mug-g4',style:{marginTop:'14px',display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:'16px'}},
+          ['Silk blouse','Temple jhumkas','Gold waist belt','Gajra'].map((it,i)=>R('div',{key:it,style:{background:'#fff',borderRadius:'16px',overflow:'hidden'}},
+            R('div',{style:{height:'180px',background:`repeating-linear-gradient(135deg,${[PAL.pink,PAL.teal,PAL.marigold,PAL.green][i]} 0 14px,#fff 14px 28px)`}}),
+            R('div',{style:{padding:'12px 14px',display:'flex',justifyContent:'space-between',alignItems:'center'}},R('span',{style:{fontWeight:600}},it),R('span',{style:{color:PAL.green,fontWeight:600,fontSize:'13px'}},'+ Add')))))
+      )))
+    );
+  },
+
+  studio(c){
+    const {PAL,s}=c;
+    const chip=(o,i)=>R('button',{key:o.name||o.id||i,onClick:o.pick,style:{display:'inline-flex',alignItems:'center',gap:'7px',border:'1px solid '+o.bd,background:o.bg,color:o.fg,cursor:'pointer',fontWeight:500,fontSize:'13px',padding:'8px 14px',borderRadius:'2px'}},
+      o.dot!==undefined&&o.dot!=='transparent'?R('span',{style:{width:'11px',height:'11px',borderRadius:'50%',background:o.dot,boxShadow:'inset 0 0 0 1px rgba(255,255,255,.25)'}}):null, o.name||o.label);
+    const row=(label,items)=>R('div',{style:{marginBottom:'20px'}},
+      R('div',{style:{fontWeight:600,fontSize:'12px',letterSpacing:'.12em',textTransform:'uppercase',color:'#C9A227',marginBottom:'10px'}},label),
+      R('div',{style:{display:'flex',gap:'7px',flexWrap:'wrap'}},items.map(chip)));
+    const results=c.findResults.map(r=>R('div',{key:r.id,style:{background:'#F5EFE6',boxShadow:'inset 0 0 0 1px rgba(168,136,78,.45)',display:'flex',flexDirection:'column'}},
+      R('button',{onClick:r.open,className:'mug-zoom',style:{border:0,background:'none',cursor:'pointer',padding:0,display:'block'}},
+        R('span',{style:{position:'relative',display:'block',overflow:'hidden',aspectRatio:'4/5'}},
+          R('img',{src:r.img,loading:'lazy',alt:r.name,style:{width:'100%',height:'100%',objectFit:'cover'}}))),
+      R('div',{style:{padding:'12px 14px 14px',display:'flex',flexDirection:'column',gap:'9px',flex:1}},
+        R('div',{style:{fontFamily:"'Cormorant Garamond',serif",fontWeight:500,fontSize:'17px',lineHeight:1.15,color:'#2C1B20'}},r.name),
+        R('div',{style:{display:'flex',alignItems:'baseline',justifyContent:'space-between',gap:'8px',marginTop:'auto'}},
+          R('span',{style:{fontSize:'12px',color:'#8B7A73'}},r.fabric),
+          R('span',{style:{fontSize:'13.5px',fontWeight:300,color:'#2C1B20'}},r.price)),
+        alink('Reserve on WhatsApp',r.wa,PAL.green,'#fff',{fontSize:'12.5px',padding:'10px 14px',justifyContent:'center'}))));
+    return R('div',null,
+      R('section',{style:{position:'relative',background:'radial-gradient(120% 120% at 50% 0%, #20131A 0%, #160A0F 72%, #100709 100%)',color:'#F5EFE6',padding:'210px 0 96px',overflow:'hidden'}},
+        R('div',{style:{position:'absolute',top:0,left:0,right:0,display:'flex',justifyContent:'center',pointerEvents:'none',zIndex:1,opacity:.5}},c.self.buildGopuram('#C9A227')),
+        R('div',{style:{position:'absolute',top:'64px',left:0,right:0,display:'flex',justifyContent:'center',pointerEvents:'none',zIndex:1}},c.self.kolamThreshold('#C9A227')),
+        wrap(R('div',{style:{position:'relative',zIndex:2,textAlign:'center'}},
+          R('div',{style:{fontSize:'11px',letterSpacing:'.26em',textTransform:'uppercase',color:'#C9A227',marginBottom:'16px'}},'The house atelier · matched to real silk'),
+          R('h1',{style:{margin:'0 0 14px',fontFamily:"'Cormorant Garamond',serif",fontWeight:400,fontSize:'clamp(38px,5.5vw,72px)',lineHeight:1.02}},'Find your drape'),
+          R('p',{style:{margin:'0 auto',maxWidth:'52ch',fontSize:'16px',lineHeight:1.7,color:'rgba(245,239,230,.72)'}},'Choose the silk, the colour, the border and the pallu. We show you the Mugdha sarees that match, ready to reserve.'))) ),
+      R('section',{style:{background:'#1A0E12',color:'#F5EFE6',padding:'48px 0 96px'}},wrap(R('div',{className:'mug-col2',style:{display:'grid',gridTemplateColumns:'.82fr 1.18fr',gap:'56px',alignItems:'start'}},
+        R('div',null,
+          row('Fabric',c.findFabrics), row('Body colour',c.findColors), row('Korvai border',c.findBorders), row('Pallu motif',c.findMotifs),
+          R('button',{onClick:c.findReset,style:{border:0,background:'none',cursor:'pointer',color:'#A8884E',fontSize:'13px',letterSpacing:'.04em',padding:'4px 1px',borderBottom:'1px solid rgba(168,136,78,.5)'}},'Reset filters')),
+        R('div',null,
+          R('div',{style:{display:'flex',alignItems:'baseline',justifyContent:'space-between',marginBottom:'18px'}},
+            R('div',{style:{fontFamily:"'Cormorant Garamond',serif",fontSize:'26px',color:'#F5EFE6'}},c.findHeading),
+            R('div',{style:{fontSize:'12px',letterSpacing:'.16em',textTransform:'uppercase',color:'#A8884E'}},'Laid out by lamplight')),
+          R('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'18px'}},results))
+      )))
+    );
+  },
+
+  bridal(c){
+    const {PAL}=c;
+    const IMG={
+      hero:'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1772862676414__mainImage1772862675537.jpg',
+      muhurtham:'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1774961792853__1774961791655__6.png',
+      reception:'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1775890841415__1775890840140__6.png',
+      sangeet:'https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1774961847740__1774961846939__6.jpg'
+    };
+    const find=(name)=>c.PRODUCTS.find(p=>p.name===name);
+    const look=[
+      {cer:'Muhurtham', sub:'The vows', img:IMG.muhurtham, prod:'Bright Red Pure Silk Saree Royal Procession'},
+      {cer:'Reception', sub:'The evening', img:IMG.reception, prod:'Lavender Pure Silk Saree Zari Checks Floral'},
+      {cer:'Sangeet', sub:'The dance', img:IMG.sangeet, prod:'Olive Green Pure Silk Saree Zari Checks'}
+    ];
+    const lookCards=look.map((b,i)=>{ const p=find(b.prod);
+      return R('div',{key:i,style:{display:'flex',flexDirection:'column'}},
+        R('button',{onClick:p?(()=>c.openProduct(p)):(()=>{}),className:'mug-zoom',style:{border:0,background:'none',cursor:'pointer',padding:0,display:'block'}},
+          R('span',{style:{position:'relative',display:'block',overflow:'hidden',aspectRatio:'3/4',boxShadow:'inset 0 0 0 1px rgba(168,136,78,.45)'}},
+            R('img',{src:b.img,loading:'lazy',alt:b.cer+' bridal saree',style:{width:'100%',height:'100%',objectFit:'cover'}}))),
+        R('div',{style:{textAlign:'center',marginTop:'20px'}},
+          R('div',{style:{fontSize:'11px',letterSpacing:'.22em',textTransform:'uppercase',color:'#A8884E'}},b.sub),
+          R('div',{style:{width:'28px',height:'1px',background:'#A8884E',margin:'12px auto'}}),
+          R('div',{style:{fontFamily:"'Cormorant Garamond',serif",fontWeight:500,fontSize:'27px',color:'#2C1B20'}},b.cer)));
+    });
+    return R('div',null,
+      R('section',{style:{position:'relative',background:'radial-gradient(120% 120% at 50% 0%, #20131A 0%, #160A0F 72%, #100709 100%)',color:'#F5EFE6',overflow:'hidden'}},
+        wrap(R('div',{className:'mug-col2',style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'60px',alignItems:'center',padding:'96px 0'}},
+          R('div',null,
+            R('div',{style:{fontFamily:"'Noto Serif Devanagari'",fontSize:'17px',letterSpacing:'.06em',color:'#C9A227',marginBottom:'16px'}},'मुहूर्तम्'),
+            R('h1',{style:{margin:0,fontFamily:"'Cormorant Garamond',serif",fontWeight:400,fontSize:'clamp(38px,5vw,68px)',lineHeight:1.04,maxWidth:'15ch'}},'A trousseau woven for your muhurtham'),
+            R('p',{style:{margin:'24px 0 0',maxWidth:'42ch',fontSize:'16px',lineHeight:1.8,color:'rgba(245,239,230,.72)'}},'Kanchipuram heirlooms in pure silk and real zari, chosen with a stylist who knows muhurtham timing. From haldi to reception.'),
+            R('div',{style:{display:'flex',alignItems:'center',gap:'26px',flexWrap:'wrap',marginTop:'34px'}},
+              alink('Book a bridal appointment',c.waLink('Hi Mugdha! I would like to book a bridal stylist appointment.'),PAL.green,'#fff',{fontSize:'15px',padding:'15px 26px'}),
+              R('button',{onClick:c.go('ar'),style:{border:0,background:'none',cursor:'pointer',color:'#E9C766',fontSize:'14.5px',letterSpacing:'.05em',padding:'6px 1px',borderBottom:'1px solid #C9A227'}},'Bridal AR try-on'))),
+          R('div',{style:{position:'relative'}},
+            R('div',{className:'mug-zoom',style:{position:'relative',overflow:'hidden',aspectRatio:'4/5',boxShadow:'inset 0 0 0 1px rgba(201,162,39,.5)'}},
+              R('img',{src:IMG.hero,loading:'lazy',alt:'Mugdha bridal silk',style:{width:'100%',height:'100%',objectFit:'cover'}}),
+              R('div',{style:{position:'absolute',inset:0,background:'radial-gradient(75% 75% at 50% 38%, rgba(16,7,9,0), rgba(16,7,9,.5) 100%)'}})),
+            R('div',{className:'mug-hide-m',style:{position:'absolute',top:'10px',bottom:'10px',left:'-24px',width:'1px',background:'#A8884E'}})))) ),
+      R('section',{style:{background:'#F5EFE6',padding:'104px 0'}},wrap(R('div',null,
+        R('div',{style:{textAlign:'center',marginBottom:'56px'}},
+          R('div',{style:{fontSize:'11px',letterSpacing:'.26em',textTransform:'uppercase',color:'#A8884E',marginBottom:'16px'}},'The bridal lookbook'),
+          H('Three drapes, three ceremonies','clamp(30px,4vw,52px)',{}),
+          R('p',{style:{margin:'16px auto 0',maxWidth:'46ch',fontSize:'15px',lineHeight:1.75,color:'#7A6A66'}},'One heirloom for each rite, in its true colour.')),
+        R('div',{className:'mug-g3',style:{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'52px 40px'}},lookCards))) ),
+      R('section',{style:{background:'#1E1016',color:'#F5EFE6',padding:'96px 0',textAlign:'center'}},wrap(R('div',null,
+        R('div',{style:{display:'flex',justifyContent:'center',marginBottom:'8px'}},c.self.kolamThreshold('#C9A227')),
+        H('Meet your bridal stylist','clamp(30px,4vw,50px)',{color:'#F5EFE6',marginTop:'18px'}),
+        R('p',{style:{color:'rgba(245,239,230,.7)',maxWidth:'46ch',margin:'14px auto 26px',fontSize:'16px',lineHeight:1.8}},'A one to one appointment in store or on video. We plan every drape from haldi to reception.'),
+        alink('Reserve on WhatsApp',c.waLink('Hi Mugdha! I would like to book a bridal stylist appointment.'),PAL.green,'#fff',{fontSize:'15px',padding:'15px 26px',justifyContent:'center'}))))
+    );
+  },
+
+  ar(c){
+    const {PAL,s}=c;
+    return R('div',null,
+      pageHead(c,PAL.violet,'AR Try-On','Drape it on you','Open your camera and see any saree draped on you, live. Snap it, share it, then reserve it on WhatsApp.'),
+      R('section',{style:{padding:'34px 0'}},wrap(R('div',{className:'mug-col2',style:{display:'grid',gridTemplateColumns:'1.2fr .8fr',gap:'30px',alignItems:'start'}},
+        R('div',{style:{position:'relative',borderRadius:'22px',overflow:'hidden',aspectRatio:'4/5',background:'#1A0E1B',display:'flex',alignItems:'center',justifyContent:'center'}},
+          R('div',{style:{position:'absolute',inset:0,background:`repeating-linear-gradient(135deg,${PAL.violet}22 0 18px,transparent 18px 36px)`}}),
+          s.arOn?R('div',{style:{position:'absolute',bottom:0,left:'50%',transform:'translateX(-50%)',width:'62%'}},c.buildSaree(PAL.pink,PAL.teal,'peacock')):null,
+          R('div',{style:{position:'relative',zIndex:2,textAlign:'center',color:'#FFF8F0'}},
+            R('div',{style:{fontFamily:'monospace',fontSize:'12px',letterSpacing:'.1em',color:'rgba(255,248,240,.6)',marginBottom:'14px'}},s.arOn?'camera live · drape locked':'camera feed'),
+            pill(s.arOn?'◉ Snap photo':'Enable camera',PAL.pink,'#fff',()=>c.set({arOn:!s.arOn}),{fontSize:'15px',padding:'15px 26px'}))),
+        R('div',null,
+          R('div',{style:{fontWeight:600,fontSize:'13px',letterSpacing:'.1em',textTransform:'uppercase',color:'#8a4a6f',marginBottom:'12px'}},'Try a drape'),
+          R('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'12px'}},
+            [[PAL.pink,PAL.teal],[PAL.red,PAL.gold],[PAL.violet,PAL.marigold],[PAL.green,PAL.pink]].map((p,i)=>
+              R('button',{key:i,onClick:()=>c.set({arOn:true}),style:{border:0,background:'#fff',borderRadius:'14px',padding:'10px',cursor:'pointer',boxShadow:'0 8px 20px rgba(26,14,27,.08)'}},c.buildSaree(p[0],p[1],'buta')))),
+          R('div',{style:{display:'flex',gap:'10px',marginTop:'16px',flexWrap:'wrap'}},
+            pill('⤓ Save snap',PAL.marigold,'#1A0E1B',()=>c.burst('gulal'),{}),
+            alink('Reserve on WhatsApp',c.waLink('Hi Mugdha! I tried a saree in AR and want to reserve it.'),PAL.green,'#fff',{})))
+      )))
+    );
+  },
+
+  stores(c){
+    const {PAL}=c;
+    const cities=[['Hyderabad',11,PAL.pink,'62%','30%'],['Bengaluru',6,PAL.teal,'55%','62%'],['Chennai',4,PAL.marigold,'70%','66%'],['Vijayawada',3,PAL.green,'72%','46%'],['Visakhapatnam',2,PAL.violet,'82%','40%']];
+    return R('div',null,
+      pageHead(c,PAL.teal,'Store locator','25+ stores, come feel the zari','Across Hyderabad, Bengaluru, Chennai and Andhra Pradesh. Walk in for a drape, a chai and a Silk Mark certificate.'),
+      R('section',{style:{padding:'34px 0'}},wrap(R('div',{className:'mug-col2',style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'30px'}},
+        R('div',{style:{position:'relative',background:'#ECE2D2',aspectRatio:'1/1',overflow:'hidden',boxShadow:'inset 0 0 0 1px rgba(168,136,78,.4)'}},
+          cities.map((ct,i)=>R('div',{key:i,style:{position:'absolute',left:ct[3],top:ct[4],transform:'translate(-50%,-100%)',textAlign:'center'}},
+            R('div',{style:{width:'18px',height:'18px',borderRadius:'50% 50% 50% 0',background:ct[2],transform:'rotate(45deg)',margin:'0 auto',boxShadow:'0 4px 10px rgba(0,0,0,.2)'}}),
+            R('div',{style:{fontSize:'11px',fontWeight:600,marginTop:'4px',transform:'translateY(2px)'}},ct[0])))),
+        R('div',{style:{display:'flex',flexDirection:'column',gap:'12px'}},
+          cities.map((ct,i)=>R('div',{key:i,style:{display:'flex',alignItems:'center',justifyContent:'space-between',background:'#fff',borderRadius:'16px',padding:'18px 20px',boxShadow:'0 8px 20px rgba(26,14,27,.06)',borderLeft:'4px solid '+ct[2]}},
+            R('div',null,R('div',{style:{fontFamily:"'Fraunces'",fontWeight:600,fontSize:'20px'}},ct[0]),R('div',{style:{color:'#8a4a6f',fontSize:'14px'}},ct[1]+' stores · open daily')),
+            alink('Directions',c.waLink('Hi Mugdha! Share the nearest store in '+ct[0]+'.'),PAL.green,'#fff',{padding:'10px 16px',fontSize:'13.5px'}))))
+      )))
+    );
+  },
+
+  quiz(c){
+    const {PAL,s}=c;
+    const qs=[{q:'Pick your color mood',opts:[['Rani and gold',PAL.pink],['Cool peacock',PAL.teal],['Marigold sun',PAL.marigold],['Midnight violet',PAL.violet]]},
+      {q:'The occasion',opts:[['Muhurtham',PAL.red],['Reception',PAL.violet],['Festive day',PAL.marigold],['Everyday grace',PAL.teal]]},
+      {q:'Your vibe',opts:[['Heirloom bride',PAL.pink],['Modern minimal',PAL.plum],['Bold and loud',PAL.red],['Soft romantic',PAL.green]]}];
+    const pick=(val)=>()=>{const st=s.quizStep;const a=Object.assign({},s.quizAns,{[st]:val});c.set(st<2?{quizStep:st+1,quizAns:a}:{quizAns:a,quizStep:3});};
+    if(s.quizStep>=3){
+      const c0=(s.quizAns[0]&&s.quizAns[0][1])||PAL.pink; const c1=(s.quizAns[1]&&s.quizAns[1][1])||PAL.teal;
+      return R('div',null, pageHead(c,PAL.pink,'Your result','Your saree is ready','Built from your color mood, occasion and vibe. Here is your personal edit.'),
+        R('section',{style:{padding:'40px 0'}},wrap(R('div',{style:{maxWidth:'520px',margin:'0 auto',background:'#fff',borderRadius:'24px',padding:'26px',boxShadow:'0 26px 56px rgba(26,14,27,.14)',textAlign:'center'}},
+          R('div',{style:{maxWidth:'260px',margin:'0 auto'}},c.buildSaree(c0,c1,'peacock')),
+          R('div',{style:{fontFamily:"'Fraunces'",fontWeight:600,fontSize:'24px',marginTop:'16px'}},'The '+((s.quizAns[2]&&s.quizAns[2][0])||'Heirloom')+' edit'),
+          R('p',{style:{color:'#8a4a6f',margin:'6px 0 18px'}},'A '+((s.quizAns[0]&&s.quizAns[0][0])||'rani')+' drape for '+((s.quizAns[1]&&s.quizAns[1][0])||'your day')+'.'),
+          R('div',{style:{display:'flex',gap:'10px',justifyContent:'center',flexWrap:'wrap'}},
+            alink('Reserve on WhatsApp',c.waLink('Hi Mugdha! My quiz result drape, please reserve.'),PAL.green,'#fff',{}),
+            pill('Retake','#fff',PAL.pink,()=>c.set({quizStep:0,quizAns:{}}),{border:'1.5px solid '+PAL.pink}),
+            pill('Shop the edit',PAL.pink,'#fff',c.go('fabrics'),{}))) )));
+    }
+    const q=qs[s.quizStep];
+    return R('div',null,
+      R('section',{style:{minHeight:'72vh',background:'#ECE2D2',display:'flex',alignItems:'center',padding:'40px 0'}},
+        wrap(R('div',{style:{maxWidth:'680px',margin:'0 auto',textAlign:'center'}},
+          R('div',{style:{display:'flex',gap:'6px',justifyContent:'center',marginBottom:'24px'}},[0,1,2].map(i=>R('div',{key:i,style:{width:'46px',height:'6px',borderRadius:'6px',background:i<=s.quizStep?PAL.pink:'rgba(26,14,27,.14)'}}))),
+          R('div',{style:{fontWeight:600,letterSpacing:'.14em',textTransform:'uppercase',fontSize:'12.5px',color:'#8a4a6f',marginBottom:'10px'}},'Question '+(s.quizStep+1)+' of 3'),
+          R('h1',{style:{margin:'0 0 28px',fontFamily:"'Clash Display'",fontWeight:700,fontSize:'clamp(32px,5vw,56px)'}},q.q),
+          R('div',{className:'mug-g4',style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'14px'}},
+            q.opts.map((o,i)=>R('button',{key:i,onClick:pick(o),className:'mug-hover-rise',style:{border:0,cursor:'pointer',background:'#fff',borderRadius:'18px',padding:'24px',display:'flex',alignItems:'center',gap:'14px',boxShadow:'0 10px 26px rgba(26,14,27,.08)',borderLeft:'5px solid '+o[1]}},
+              R('span',{style:{width:'30px',height:'30px',borderRadius:'50%',background:o[1],flexShrink:0}}),
+              R('span',{style:{fontFamily:"'Fraunces'",fontWeight:600,fontSize:'20px'}},o[0])))))) )
+    );
+  }
+};
+
+function studioRow(label,node){return R('div',{style:{marginBottom:'18px'}},R('div',{style:{fontWeight:600,fontSize:'13px',letterSpacing:'.1em',textTransform:'uppercase',color:'#8a4a6f',marginBottom:'9px'}},label),node);}
+function swRow(sw,PAL){return R('div',{style:{display:'flex',gap:'8px',flexWrap:'wrap'}},sw.map((c,i)=>R('button',{key:i,onClick:c.pick,style:{width:'34px',height:'34px',borderRadius:'10px',border:0,cursor:'pointer',background:c.hex,boxShadow:c.ring}})));}
+</script>
+</body>
+</html>
+
