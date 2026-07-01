@@ -33,3 +33,175 @@ body {
   background: var(--color-kora-ivory);
   color: var(--color-ink);
 }
+
+/*
+ * Ambient motion, ported from the reference's global <style> block.
+ * Every animation here is either purely decorative (lamp flicker, silk
+ * highlight sweep, marquee) or a self-draw reveal (kolam), and all of it
+ * collapses under prefers-reduced-motion below.
+ */
+@keyframes mug-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes mug-draw {
+  from {
+    stroke-dashoffset: var(--len);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes mug-spec {
+  0% {
+    transform: translateX(-60%) rotate(8deg);
+  }
+  100% {
+    transform: translateX(220%) rotate(8deg);
+  }
+}
+@keyframes mug-smoke {
+  0% {
+    transform: translateY(20px) scale(1);
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-70px) scale(1.5);
+    opacity: 0;
+  }
+}
+@keyframes mug-flicker {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  45% {
+    opacity: 0.55;
+  }
+  70% {
+    opacity: 1;
+  }
+}
+@keyframes mug-rays {
+  0% {
+    opacity: 0.32;
+    transform: translateX(-3%);
+  }
+  100% {
+    opacity: 0.5;
+    transform: translateX(3%);
+  }
+}
+
+.mug-silk-ripple {
+  filter: url(#mugSilkRipple);
+}
+.mug-spec {
+  animation: mug-spec 9s ease-in-out infinite alternate;
+}
+.mug-smoke {
+  animation: mug-smoke linear infinite;
+}
+.mug-rays {
+  animation: mug-rays 7s ease-in-out infinite alternate;
+}
+.mug-flicker {
+  animation: mug-flicker 4s ease-in-out infinite;
+}
+
+/* Product-card hover: a slow zoom on the photo, a "View" label fading in. */
+.mug-zoom {
+  overflow: hidden;
+}
+.mug-zoom img {
+  transition: transform 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.mug-zoom:hover img {
+  transform: scale(1.05);
+}
+.mug-view {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.mug-zoom:hover .mug-view {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+:focus-visible {
+  outline: 3px solid #0ca4a5;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/*
+ * Reference breakpoint, ported as-is (720px, not Tailwind's 768px default)
+ * because these are layout properties (position, width) that inline
+ * styles would otherwise win over any Tailwind responsive class.
+ */
+.mug-only-m {
+  display: none;
+}
+@media (min-width: 721px) {
+  .mug-only-m {
+    display: none !important;
+  }
+}
+@media (max-width: 720px) {
+  .mug-only-m {
+    display: flex !important;
+  }
+  .mug-hide-m {
+    display: none !important;
+  }
+  .mug-root {
+    padding-bottom: 74px !important;
+  }
+  .mug-hero {
+    height: auto !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .mug-herobody {
+    padding: 26px 18px 34px !important;
+  }
+  .mug-h1 {
+    font-size: 13.5vw !important;
+    max-width: none !important;
+  }
+  .mug-col2 {
+    grid-template-columns: 1fr !important;
+  }
+  .mug-g3 {
+    grid-template-columns: 1fr !important;
+  }
+  .mug-g4 {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .mug-herosilk {
+    position: relative !important;
+    width: 100% !important;
+    height: 66vw !important;
+  }
+  .mug-herowrap {
+    min-height: 0 !important;
+    padding: 30px 18px 42px !important;
+  }
+  .mug-hh1 {
+    font-size: 10.5vw !important;
+  }
+}
