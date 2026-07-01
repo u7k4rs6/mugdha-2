@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens locked from /docs/4_FRONTEND_SPEC.md section 1.
+ * Colour comes only from real silk photography and lamp gold: no flat
+ * colour fill over a saree photo, no full spectrum gradient.
+ */
+@theme inline {
+  --color-kora-ivory: #f4efe3;
+  --color-kora-soft: #efe7d6;
+  --color-oxblood: #5a1a1f;
+  --color-temple-stone: #1a0e12;
+  --color-temple-stone-light: #20131a;
+  --color-zari-gold: #c9a227;
+  --color-zari-highlight: #e9c766;
+  --color-peacock: #0e5c58;
+  --color-marigold: #e08a1e;
+  --color-ink: #241a14;
+
+  /* Couture serif: display and headings. */
+  --font-serif: var(--nf-serif), "Cormorant Garamond", serif;
+  /* Eyebrows and structural labels: small letterspaced gold caps. */
+  --font-label: var(--nf-label), "Marcellus", serif;
+  /* Body, UI, prices, captions: the quiet grotesk. Also the Tailwind default. */
+  --font-sans: var(--nf-body), "Hanken Grotesk", sans-serif;
+  /* Script accents, decorative only. */
+  --font-tamil: var(--nf-tamil), "Noto Serif Tamil", serif;
+  --font-telugu: var(--nf-telugu), "Noto Serif Telugu", serif;
+  --font-devanagari: var(--nf-devanagari), "Noto Serif Devanagari", serif;
+}
+
+body {
+  background: var(--color-kora-ivory);
+  color: var(--color-ink);
+}
