@@ -30,11 +30,18 @@ import type {
 // just by importing a string constant from this file.
 
 // A saree whose source photo could not be migrated (see the migration
-// report) has no image asset in Sanity; this resolves to "" for it rather
-// than throwing, since Saree.image is a required string in the type.
+// report) has no image asset in Sanity. An empty string here previously
+// produced <img src=""> which browsers resolve against the current page
+// URL and render as a broken-image icon, not a graceful placeholder. This
+// inline SVG is always loadable (no network request at all) and reads as
+// an intentional "photo coming soon" tile instead, in every component
+// that uses ZoomImage or a direct <img>, without any of them changing.
+const MISSING_IMAGE_PLACEHOLDER =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'%3E%3Crect width='400' height='500' fill='%23ECE2D2'/%3E%3Ctext x='200' y='250' font-family='Georgia,serif' font-size='20' fill='%238B7A73' text-anchor='middle' dominant-baseline='middle'%3EPhoto coming soon%3C/text%3E%3C/svg%3E";
+
 type SanityImageRef = Parameters<typeof urlFor>[0] | null | undefined;
 function toImageUrl(image: SanityImageRef, width = 1600): string {
-  if (!image) return "";
+  if (!image) return MISSING_IMAGE_PLACEHOLDER;
   return urlFor(image).width(width).fit("max").auto("format").url();
 }
 
@@ -61,14 +68,24 @@ export function getSareesByColor(sarees: Saree[], colorFamily: string): Saree[] 
   return sarees.filter((s) => s.colorFamily === colorFamily);
 }
 
-// The one named piece that always closes the "Newly on the loom" rail,
-// regardless of fetch order. See /docs and Step 2's note on this.
+// The reference's exact "Newly on the loom" sequence, by name. Migrated
+// sarees are ordered by _createdAt in the query, but the migration writes
+// them with 8-way concurrency, so creation order does not reliably match
+// catalogue position; the sequence is pinned here instead, matching Step 2.
+const NEW_DROP_ORDER = [
+  "Red Georgette Saree Peacock Bird Zari Design",
+  "Rani Pink Georgette Saree Floral Jaal Deer Bird Border",
+  "Rani Pink Georgette Saree Gold Buttas Bird Zari Border",
+  "Pink Georgette Saree Silver Zari Butis Shikargah Border",
+  "Shimmer Green Glass Tissue Saree with Delicate Silver Zari Floral Embroidery Pallu",
+];
 const NEW_DROP_EXTRA = "Sky Blue Semi Silk Saree Paithani Peacock Border";
 
 /** Homepage "Newly on the loom" rail, in the exact reference order. */
 export function getNewDrops(sarees: Saree[]): Saree[] {
-  const ordered = sarees.filter((s) => s.isNew && s.name !== NEW_DROP_EXTRA);
-  const extra = sarees.find((s) => s.name === NEW_DROP_EXTRA);
+  const byName = new Map(sarees.map((s) => [s.name, s]));
+  const ordered = NEW_DROP_ORDER.map((name) => byName.get(name)).filter((s): s is Saree => Boolean(s));
+  const extra = byName.get(NEW_DROP_EXTRA);
   return extra ? [...ordered, extra] : ordered;
 }
 
@@ -87,9 +104,18 @@ export function getFabricByName(fabrics: Fabric[], name: string): Fabric | undef
   return fabrics.find((f) => f.name === name);
 }
 
-/** CraftPanel's three heritage weaves: the only fabrics with onLoomDays set. */
+// The reference's default active CraftPanel tab is Kanchipuram (the
+// component's useState(weaves[0]) picks whichever comes first). The Sanity
+// query orders fabrics alphabetically for predictability elsewhere, which
+// would default to Banarasi instead, so the canonical order is restored
+// here rather than in the query.
+const HERITAGE_WEAVE_ORDER = ["Kanchipuram", "Banarasi", "Mysore"];
+
+/** CraftPanel's three heritage weaves: the only fabrics with onLoomDays set, in the reference's tab order. */
 export function getHeritageWeaves(fabrics: Fabric[]): Fabric[] {
-  return fabrics.filter((f) => f.onLoomDays);
+  return fabrics
+    .filter((f) => f.onLoomDays)
+    .sort((a, b) => HERITAGE_WEAVE_ORDER.indexOf(a.name) - HERITAGE_WEAVE_ORDER.indexOf(b.name));
 }
 
 /** Homepage "The house weaves" tiles: top real fabrics by saree count, Satin and the heritage weaves excluded. */
@@ -108,13 +134,20 @@ interface RawMoodStory extends Omit<MoodStory, "heroImage"> {
   heroImage: SanityImageRef;
 }
 
+// The reference's exact "Read by colour" sequence. The query orders
+// alphabetically for predictability elsewhere; restored to the reference
+// order here, same reasoning as HERITAGE_WEAVE_ORDER above.
+const MOOD_COLOR_ORDER = ["Pink", "Red", "Yellow", "Blue", "Green", "Purple"];
+
 export async function getMoodStories(): Promise<MoodStory[]> {
   const raw = await client.fetch<RawMoodStory[]>(
     MOOD_STORIES_QUERY,
     {},
     { next: { tags: ["moodStory"] } },
   );
-  return raw.map((m) => ({ ...m, heroImage: toImageUrl(m.heroImage) }));
+  return raw
+    .map((m) => ({ ...m, heroImage: toImageUrl(m.heroImage) }))
+    .sort((a, b) => MOOD_COLOR_ORDER.indexOf(a.colorName) - MOOD_COLOR_ORDER.indexOf(b.colorName));
 }
 
 // ---- stores ----
