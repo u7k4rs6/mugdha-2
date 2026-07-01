@@ -4,13 +4,18 @@
  * and createOrReplace, so re-running this converges instead of duplicating.
  *
  * Usage:
- *   npm run migrate
+ *   npm run migrate            writes documents and uploads images
+ *   npm run migrate -- --dry-run
+ *                              writes nothing; checks every source image
+ *                              URL and reports what WOULD be created
  *
  * Requires in .env.local: NEXT_PUBLIC_SANITY_PROJECT_ID, SANITY_API_WRITE_TOKEN.
+ * --dry-run only needs NEXT_PUBLIC_SANITY_PROJECT_ID (no writes, no token).
  * Targets the "development" dataset by default; override with MIGRATE_DATASET.
  */
 
-import "dotenv/config";
+import { config } from "dotenv";
+config({ path: ".env.local" });
 import { createClient } from "@sanity/client";
 import {
   RAW_PRODUCTS,
@@ -28,15 +33,21 @@ import {
   motifFor,
   computeIsNew,
 } from "./source-data";
-import { uploadImageAsset, type BrokenImage } from "./upload-image";
+import { uploadImageAsset, checkImageUrl, type BrokenImage } from "./upload-image";
+
+const DRY_RUN = process.argv.includes("--dry-run");
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const token = process.env.SANITY_API_WRITE_TOKEN;
 const dataset = process.env.MIGRATE_DATASET || "development";
 
-if (!projectId || !token) {
+if (!projectId) {
+  console.error("Missing NEXT_PUBLIC_SANITY_PROJECT_ID in .env.local. See .env.local.example.");
+  process.exit(1);
+}
+if (!DRY_RUN && !token) {
   console.error(
-    "Missing NEXT_PUBLIC_SANITY_PROJECT_ID or SANITY_API_WRITE_TOKEN in .env.local. See .env.local.example.",
+    "Missing SANITY_API_WRITE_TOKEN in .env.local. See .env.local.example. (Not needed for --dry-run.)",
   );
   process.exit(1);
 }
@@ -44,7 +55,7 @@ if (!projectId || !token) {
 const client = createClient({
   projectId,
   dataset,
-  token,
+  token: DRY_RUN ? undefined : token,
   apiVersion: "2026-01-01",
   useCdn: false,
 });
@@ -75,20 +86,33 @@ function filenameFor(url: string): string {
   return decodeURIComponent(last).slice(0, 200);
 }
 
+/**
+ * In dry-run mode: only checks the source image is fetchable, writes
+ * nothing, returns a placeholder id. In real mode: uploads the image and
+ * creates/replaces the document as before.
+ */
+async function resolveImage(sourceUrl: string, context: { documentType: string; documentName: string }) {
+  if (DRY_RUN) {
+    const ok = await checkImageUrl(sourceUrl, context, report);
+    return ok ? ({ _type: "image" as const, asset: { _type: "reference" as const, _ref: "dry-run" } }) : undefined;
+  }
+  return uploadImageAsset(client, sourceUrl, filenameFor(sourceUrl), context, report);
+}
+
+async function writeDoc(doc: Record<string, unknown> & { _id: string }) {
+  if (DRY_RUN) return doc._id;
+  await client.createOrReplace(doc as Parameters<typeof client.createOrReplace>[0]);
+  return doc._id;
+}
+
 async function migrateFabrics() {
   console.log("\n== Fabrics ==");
   const catalogueFabrics = await mapWithConcurrency(FABRIC_FACET_NAMES, 6, async (name) => {
     const firstMatch = RAW_PRODUCTS.find((p) => p.fabric === name);
     const sourceUrl = FABRIC_IMAGE_OVERRIDE[name] ?? firstMatch?.image ?? HERO_IMAGE;
-    const image = await uploadImageAsset(
-      client,
-      sourceUrl,
-      filenameFor(sourceUrl),
-      { documentType: "fabric", documentName: name },
-      report,
-    );
+    const image = await resolveImage(sourceUrl, { documentType: "fabric", documentName: name });
     const id = `fabric-${slugify(name)}`;
-    await client.createOrReplace({
+    await writeDoc({
       _id: id,
       _type: "fabric",
       name,
@@ -100,15 +124,9 @@ async function migrateFabrics() {
   });
 
   const heritageIds = await mapWithConcurrency(HERITAGE_WEAVES, 3, async (w) => {
-    const image = await uploadImageAsset(
-      client,
-      w.heroImage,
-      filenameFor(w.heroImage),
-      { documentType: "fabric", documentName: w.name },
-      report,
-    );
+    const image = await resolveImage(w.heroImage, { documentType: "fabric", documentName: w.name });
     const id = `fabric-${w.slug}`;
-    await client.createOrReplace({
+    await writeDoc({
       _id: id,
       _type: "fabric",
       name: w.name,
@@ -123,7 +141,7 @@ async function migrateFabrics() {
   });
 
   counts.fabric = catalogueFabrics.length + heritageIds.length;
-  console.log(`Created/updated ${counts.fabric} fabrics.`);
+  console.log(`${DRY_RUN ? "Would create/update" : "Created/updated"} ${counts.fabric} fabrics.`);
   return { fabricIdByName: Object.fromEntries(FABRIC_FACET_NAMES.map((n, i) => [n, catalogueFabrics[i]])) };
 }
 
@@ -138,14 +156,8 @@ async function migrateSarees(fabricIdByName: Record<string, string>) {
     if (!fabricId) {
       throw new Error(`No migrated fabric found for "${p.fabric}" (saree "${name}")`);
     }
-    const image = await uploadImageAsset(
-      client,
-      p.image,
-      filenameFor(p.image),
-      { documentType: "saree", documentName: name },
-      report,
-    );
-    await client.createOrReplace({
+    const image = await resolveImage(p.image, { documentType: "saree", documentName: name });
+    await writeDoc({
       _id: id,
       _type: "saree",
       name,
@@ -164,7 +176,7 @@ async function migrateSarees(fabricIdByName: Record<string, string>) {
   });
 
   counts.saree = sareeIds.length;
-  console.log(`Created/updated ${counts.saree} sarees.`);
+  console.log(`${DRY_RUN ? "Would create/update" : "Created/updated"} ${counts.saree} sarees.`);
   return sareeIds;
 }
 
@@ -174,15 +186,9 @@ async function migrateMoodStories() {
     const count = RAW_PRODUCTS.filter((p) => p.color === color).length;
     const firstMatch = RAW_PRODUCTS.find((p) => p.color === color);
     const sourceUrl = MOOD_IMAGE_OVERRIDE[color] ?? firstMatch?.image ?? HERO_IMAGE;
-    const image = await uploadImageAsset(
-      client,
-      sourceUrl,
-      filenameFor(sourceUrl),
-      { documentType: "moodStory", documentName: color },
-      report,
-    );
+    const image = await resolveImage(sourceUrl, { documentType: "moodStory", documentName: color });
     const id = `moodStory-${slugify(color)}`;
-    await client.createOrReplace({
+    await writeDoc({
       _id: id,
       _type: "moodStory",
       colorName: color,
@@ -193,13 +199,13 @@ async function migrateMoodStories() {
     return id;
   });
   counts.moodStory = MOOD_COLORS.length;
-  console.log(`Created/updated ${counts.moodStory} mood stories.`);
+  console.log(`${DRY_RUN ? "Would create/update" : "Created/updated"} ${counts.moodStory} mood stories.`);
 }
 
 async function migrateStores() {
   console.log("\n== Stores ==");
   for (const s of STORES) {
-    await client.createOrReplace({
+    await writeDoc({
       _id: `store-${s.slug}`,
       _type: "store",
       city: s.city,
@@ -209,7 +215,7 @@ async function migrateStores() {
     });
   }
   counts.store = STORES.length;
-  console.log(`Created/updated ${counts.store} stores.`);
+  console.log(`${DRY_RUN ? "Would create/update" : "Created/updated"} ${counts.store} stores.`);
 }
 
 async function migrateBridalLooks(sareeIds: { id: string; name: string }[]) {
@@ -232,14 +238,8 @@ async function migrateBridalLooks(sareeIds: { id: string; name: string }[]) {
   for (const pick of picks) {
     const saree = sareeIds[pick.sareeIndex];
     if (!saree) continue;
-    const image = await uploadImageAsset(
-      client,
-      pick.image,
-      filenameFor(pick.image),
-      { documentType: "bridalLook", documentName: pick.ceremony },
-      report,
-    );
-    await client.createOrReplace({
+    const image = await resolveImage(pick.image, { documentType: "bridalLook", documentName: pick.ceremony });
+    await writeDoc({
       _id: `bridalLook-${pick.slug}`,
       _type: "bridalLook",
       ceremony: pick.ceremony,
@@ -250,12 +250,12 @@ async function migrateBridalLooks(sareeIds: { id: string; name: string }[]) {
     created++;
   }
   counts.bridalLook = created;
-  console.log(`Created/updated ${counts.bridalLook} bridal looks.`);
+  console.log(`${DRY_RUN ? "Would create/update" : "Created/updated"} ${counts.bridalLook} bridal looks.`);
 }
 
 async function migrateSiteSettings() {
   console.log("\n== Site settings ==");
-  await client.createOrReplace({
+  await writeDoc({
     _id: "siteSettings",
     _type: "siteSettings",
     whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "",
@@ -270,16 +270,17 @@ async function migrateSiteSettings() {
     ],
     mapsProvider: "google",
   });
-  console.log("Created/updated siteSettings.");
+  console.log(`${DRY_RUN ? "Would create/update" : "Created/updated"} siteSettings.`);
   if (!process.env.NEXT_PUBLIC_WHATSAPP_NUMBER) {
     console.log(
-      "  NEXT_PUBLIC_WHATSAPP_NUMBER was not set, whatsappNumber is blank. Set it in Studio or .env.local and rerun.",
+      "  NEXT_PUBLIC_WHATSAPP_NUMBER was not set, whatsappNumber would be blank. Set it in Studio or .env.local and rerun.",
     );
   }
 }
 
 async function main() {
-  console.log(`Migrating into dataset "${dataset}" on project "${projectId}".`);
+  console.log(DRY_RUN ? "== DRY RUN: nothing will be written ==" : "== LIVE RUN ==");
+  console.log(`Target dataset "${dataset}" on project "${projectId}".`);
   console.log(`Colour facets available for reference: ${COLOR_FACETS.map((c) => c.name).join(", ")}`);
 
   const { fabricIdByName } = await migrateFabrics();
@@ -290,24 +291,30 @@ async function main() {
   await migrateSiteSettings();
 
   console.log("\n== Summary ==");
+  console.log(DRY_RUN ? "(dry run, nothing was written)" : "(written)");
   for (const [type, count] of Object.entries(counts)) {
     console.log(`  ${type}: ${count}`);
   }
 
+  const label = DRY_RUN ? "Images that would fail to migrate" : "Images that need resupplying";
   if (report.length) {
-    console.log(`\n== Images that need resupplying (${report.length}) ==`);
-    console.log("These documents were created without an image because the source photo could not be fetched:");
+    console.log(`\n== ${label} (${report.length}) ==`);
+    console.log(
+      DRY_RUN
+        ? "These source photos could not be fetched; on a real run, that document would be created without an image:"
+        : "These documents were created without an image because the source photo could not be fetched:",
+    );
     for (const item of report) {
       console.log(`  [${item.documentType}] ${item.documentName}`);
       console.log(`    source: ${item.sourceUrl}`);
       console.log(`    reason: ${item.reason}`);
     }
   } else {
-    console.log("\nAll images uploaded successfully, nothing to resupply.");
+    console.log(`\nAll images ${DRY_RUN ? "are" : "uploaded successfully,"} reachable, nothing to resupply.`);
   }
 }
 
 main().catch((err) => {
-  console.error("\nMigration failed:", err);
+  console.error(`\n${DRY_RUN ? "Dry run" : "Migration"} failed:`, err);
   process.exit(1);
 });

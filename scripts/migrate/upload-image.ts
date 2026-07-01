@@ -8,6 +8,48 @@ export interface BrokenImage {
 }
 
 const cache = new Map<string, string>(); // source url -> Sanity asset _id
+const checkCache = new Map<string, boolean>(); // source url -> reachable, for dry-run
+
+/**
+ * Dry-run only: checks whether a source image is fetchable without
+ * downloading it or writing anything to Sanity. Tries HEAD first (cheap),
+ * falls back to a GET whose body is aborted immediately if the host
+ * rejects HEAD (some S3 configurations do).
+ */
+export async function checkImageUrl(
+  sourceUrl: string,
+  context: { documentType: string; documentName: string },
+  report: BrokenImage[],
+): Promise<boolean> {
+  const cached = checkCache.get(sourceUrl);
+  if (cached !== undefined) return cached;
+
+  const recordFailure = (reason: string) => {
+    report.push({ documentType: context.documentType, documentName: context.documentName, sourceUrl, reason });
+    checkCache.set(sourceUrl, false);
+    return false;
+  };
+
+  try {
+    const head = await fetch(sourceUrl, { method: "HEAD" });
+    if (head.ok) {
+      checkCache.set(sourceUrl, true);
+      return true;
+    }
+    if (head.status !== 405 && head.status !== 501) {
+      return recordFailure(`HTTP ${head.status}`);
+    }
+    // Host does not support HEAD, retry with GET and abort after headers.
+    const controller = new AbortController();
+    const res = await fetch(sourceUrl, { signal: controller.signal });
+    controller.abort();
+    if (!res.ok) return recordFailure(`HTTP ${res.status}`);
+    checkCache.set(sourceUrl, true);
+    return true;
+  } catch (err) {
+    return recordFailure(err instanceof Error ? err.message : String(err));
+  }
+}
 
 /**
  * Fetches a source image and uploads it to Sanity as an asset, so images
