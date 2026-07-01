@@ -12,7 +12,6 @@ import { MobileNav } from "@/components/MobileNav";
 import { TempleBorder } from "@/components/motifs/TempleBorder";
 import { Kolam } from "@/components/motifs/Kolam";
 import {
-  BRIDAL_IMAGE,
   getColorFacets,
   getFabrics,
   getHeritageWeaves,
@@ -25,6 +24,7 @@ import {
   getStores,
   getWeaveGridFabrics,
 } from "@/lib/data";
+import { BRIDAL_IMAGE } from "@/lib/brand-images";
 import { formatINR } from "@/lib/format";
 
 function slugify(name: string): string {

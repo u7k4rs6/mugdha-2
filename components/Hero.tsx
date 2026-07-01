@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePrefersReducedMotion } from "@/lib/use-prefers-reduced-motion";
-import { HERO_IMAGE } from "@/lib/data";
+import { HERO_IMAGE } from "@/lib/brand-images";
 
 /**
  * The living-silk hero. In the reference this is not a WebGL cursor-lamp

@@ -24,14 +24,10 @@ import type {
   Store,
 } from "./types";
 
-// ---- brand imagery, fixed assets, not part of the Sanity content model ----
-// Unchanged from Step 2: these are not editorial content Mugdha manages
-// through Studio, they are the Hero and BridalSection's fixed backdrop art.
-
-export const HERO_IMAGE =
-  "https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1771829391494__1771829391308__Designer%2520Blend.jpg";
-export const BRIDAL_IMAGE =
-  "https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1771307031443__1768832146285__Kora%2520Silk.jpg";
+// Brand imagery (HERO_IMAGE, BRIDAL_IMAGE) moved to lib/brand-images.ts: a
+// client component (Hero.tsx) needs HERO_IMAGE, and it must not pull the
+// Sanity client (and its server-only read token) into the browser bundle
+// just by importing a string constant from this file.
 
 // A saree whose source photo could not be migrated (see the migration
 // report) has no image asset in Sanity; this resolves to "" for it rather
