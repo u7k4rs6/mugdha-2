@@ -3,12 +3,13 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     // Per /docs/3_SECURITY_AND_ACCESS.md: allowlist only approved sources.
-    // The Mugdha product photography bucket today, the Sanity CDN once
-    // Step 3 lands.
+    // Every image now comes from the Sanity CDN (Step 3's migration
+    // uploaded the product photography there), so the old direct S3
+    // bucket domain is no longer needed here.
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "mugdhabk.s3.ap-south-1.amazonaws.com",
+        hostname: "cdn.sanity.io",
       },
     ],
   },

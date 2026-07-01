@@ -1,338 +1,208 @@
-// Local, typed placeholder data. Step 3 replaces this module with the Sanity
-// client. Every export here matches a type in /lib/types.ts, so pages can
-// swap the import without touching a single component.
+// Sanity-backed data layer. Every function here returns exactly the shape
+// defined in /lib/types.ts, the contract every component and page already
+// consumes. Step 2's local arrays became async fetches; pages now `await`
+// these instead of importing plain constants, but no component changed.
 
-import catalogueSeed from "./data/catalogue-seed.json";
+import { client } from "./sanity/client";
+import { urlFor } from "./sanity/image";
+import {
+  BRIDAL_LOOKS_QUERY,
+  FABRICS_QUERY,
+  JOURNAL_POSTS_QUERY,
+  MOOD_STORIES_QUERY,
+  SAREES_QUERY,
+  SITE_SETTINGS_QUERY,
+  STORES_QUERY,
+} from "./queries";
 import type {
   BridalLook,
   Fabric,
   JournalPost,
   MoodStory,
-  PalluMotif,
   Saree,
   SiteSettings,
   Store,
 } from "./types";
 
 // ---- brand imagery, fixed assets, not part of the Sanity content model ----
+// Unchanged from Step 2: these are not editorial content Mugdha manages
+// through Studio, they are the Hero and BridalSection's fixed backdrop art.
 
 export const HERO_IMAGE =
   "https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1771829391494__1771829391308__Designer%2520Blend.jpg";
 export const BRIDAL_IMAGE =
   "https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1771307031443__1768832146285__Kora%2520Silk.jpg";
 
-// ---- sarees, mapped from the real 119 product catalogue ----
-
-interface RawProduct {
-  name: string;
-  price: number;
-  mrp: number;
-  offer: number;
-  color: string;
-  fabric: string;
-  image: string;
+// A saree whose source photo could not be migrated (see the migration
+// report) has no image asset in Sanity; this resolves to "" for it rather
+// than throwing, since Saree.image is a required string in the type.
+type SanityImageRef = Parameters<typeof urlFor>[0] | null | undefined;
+function toImageUrl(image: SanityImageRef, width = 1600): string {
+  if (!image) return "";
+  return urlFor(image).width(width).fit("max").auto("format").url();
 }
 
-const RAW_PRODUCTS = catalogueSeed.products as RawProduct[];
+// ---- sarees ----
 
-function slugify(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+interface RawSaree extends Omit<Saree, "image"> {
+  image: SanityImageRef;
 }
 
-function motifFor(name: string): PalluMotif {
-  const n = name.toLowerCase();
-  if (n.includes("temple") || n.includes("paithani")) return "temple";
-  if (
-    n.includes("peacock") ||
-    n.includes("bird") ||
-    n.includes("swan") ||
-    n.includes("crane") ||
-    n.includes("deer")
-  )
-    return "peacock";
-  return "buta";
+export async function getSarees(): Promise<Saree[]> {
+  const raw = await client.fetch<RawSaree[]>(SAREES_QUERY, {}, { next: { tags: ["saree"] } });
+  return raw.map((s) => ({ ...s, image: toImageUrl(s.image) }));
 }
 
-// The six newest pieces on the homepage drops rail, picked the same way the
-// reference does: skip three names, take the next five in catalogue order,
-// then append one named piece.
-const NEW_DROP_SKIP = new Set([
-  "Rani Pink Georgette Saree Paisley Buttas Elephant Border",
-  "Light Gold Pure Silk Saree Rich Diamond Zari Pallu",
-  "Lavender Semi Silk Saree Floral Bird Print Blue Border",
-]);
-const NEW_DROP_EXTRA = "Sky Blue Semi Silk Saree Paithani Peacock Border";
-
-const newDropNames = new Set<string>();
-{
-  let picked = 0;
-  for (const p of RAW_PRODUCTS) {
-    if (picked >= 5) break;
-    if (NEW_DROP_SKIP.has(p.name.replace(/&amp;/g, "&"))) continue;
-    newDropNames.add(p.name);
-    picked++;
-  }
-  newDropNames.add(NEW_DROP_EXTRA);
-}
-
-export const sarees: Saree[] = RAW_PRODUCTS.map((p, i) => {
-  const name = p.name.replace(/&amp;/g, "&");
-  const id = "MUG-" + String(1001 + i);
-  return {
-    id,
-    slug: slugify(name) + "-" + id.toLowerCase(),
-    name,
-    fabric: p.fabric,
-    price: p.price,
-    mrp: p.mrp,
-    offerPercent: p.offer,
-    colorFamily: p.color,
-    palluMotif: motifFor(name),
-    image: p.image,
-    isNew: newDropNames.has(p.name),
-    silkMarkCertified: true,
-  };
-});
-
-export function getSareeById(id: string): Saree | undefined {
+export function getSareeById(sarees: Saree[], id: string): Saree | undefined {
   return sarees.find((s) => s.id === id);
 }
 
-export function getSareesByFabric(fabricName: string): Saree[] {
+export function getSareesByFabric(sarees: Saree[], fabricName: string): Saree[] {
   return sarees.filter((s) => s.fabric === fabricName);
 }
 
-export function getSareesByColor(colorFamily: string): Saree[] {
+export function getSareesByColor(sarees: Saree[], colorFamily: string): Saree[] {
   return sarees.filter((s) => s.colorFamily === colorFamily);
 }
 
+// The one named piece that always closes the "Newly on the loom" rail,
+// regardless of fetch order. See /docs and Step 2's note on this.
+const NEW_DROP_EXTRA = "Sky Blue Semi Silk Saree Paithani Peacock Border";
+
 /** Homepage "Newly on the loom" rail, in the exact reference order. */
-export function getNewDrops(): Saree[] {
-  const ordered: Saree[] = [];
-  for (const s of sarees) {
-    if (s.isNew && s.name !== NEW_DROP_EXTRA) ordered.push(s);
-  }
+export function getNewDrops(sarees: Saree[]): Saree[] {
+  const ordered = sarees.filter((s) => s.isNew && s.name !== NEW_DROP_EXTRA);
   const extra = sarees.find((s) => s.name === NEW_DROP_EXTRA);
-  if (extra) ordered.push(extra);
-  return ordered;
+  return extra ? [...ordered, extra] : ordered;
 }
 
-// ---- fabrics: the real catalogue weaves, plus the three heritage weaves ----
+// ---- fabrics ----
 
-const FABRIC_SCRIPTS: Record<string, string> = {
-  Georgette: "जॉर्जेट",
-  "Semi Silk": "सेमी",
-  "Pure Silk": "பட்டு",
-  "Mashru Silk": "मश्रू",
-  Silk: "पट्टु",
-  Satin: "साटन",
-  "Khaddi Georgette": "खद्दी",
-};
+interface RawFabric extends Omit<Fabric, "heroImage"> {
+  heroImage: SanityImageRef;
+}
 
-// A couple of catalogue fabrics photograph better from a curated shot than
-// the first matching product, same choice the reference makes.
-const FABRIC_IMAGE_OVERRIDE: Record<string, string> = {
-  "Semi Silk":
-    "https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1774610415397__1774610414612__6.jpg",
-  "Pure Silk":
-    "https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1772447691560__1772447690715__633042_047-213864-1.jpg.jpeg",
-};
+export async function getFabrics(): Promise<Fabric[]> {
+  const raw = await client.fetch<RawFabric[]>(FABRICS_QUERY, {}, { next: { tags: ["fabric"] } });
+  return raw.map((f) => ({ ...f, heroImage: toImageUrl(f.heroImage) }));
+}
 
-const CATALOGUE_FABRIC_NAMES = (catalogueSeed.fabricFacets as { name: string }[]).map(
-  (f) => f.name,
-);
-
-/** Colour name plus swatch hex, for the Finder's colour and border dot chips. */
-export const colorFacets = catalogueSeed.colorFacets as {
-  name: string;
-  swatch: string;
-  count: number;
-}[];
-
-const catalogueFabrics: Fabric[] = CATALOGUE_FABRIC_NAMES.map((name) => {
-  const firstMatch = RAW_PRODUCTS.find((p) => p.fabric === name);
-  return {
-    id: "fab-" + slugify(name),
-    slug: slugify(name),
-    name,
-    script: FABRIC_SCRIPTS[name],
-    heroImage: FABRIC_IMAGE_OVERRIDE[name] ?? firstMatch?.image ?? HERO_IMAGE,
-  };
-});
-
-const heritageFabrics: Fabric[] = [
-  {
-    id: "fab-kanchipuram",
-    slug: "kanchipuram",
-    name: "Kanchipuram",
-    script: "காஞ்சி",
-    story:
-      "Mulberry silk, korvai contrast border, real zari. Three shuttles, one weaver, weeks on the loom.",
-    heroImage: HERO_IMAGE,
-    onLoomDays: "18 to 30 days",
-    accentColor: "#E6128C",
-  },
-  {
-    id: "fab-banarasi",
-    slug: "banarasi",
-    name: "Banarasi",
-    script: "बनारस",
-    story:
-      "Mughal jaal and meenakari brocade from the lanes of Varanasi. Gold and silver zari floats.",
-    heroImage:
-      "https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1771307031443__1768832146285__Kora%2520Silk.jpg",
-    onLoomDays: "15 to 25 days",
-    accentColor: "#FFB100",
-  },
-  {
-    id: "fab-mysore",
-    slug: "mysore",
-    name: "Mysore",
-    script: "ಮೈಸೂರು",
-    story:
-      "Feather light pure crepe silk with a soft sheen and a slim gold edge. The everyday drape.",
-    heroImage:
-      "https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1771829281068__1771829280886__crepe.jpg",
-    onLoomDays: "6 to 10 days",
-    accentColor: "#0CA4A5",
-  },
-];
-
-export const fabrics: Fabric[] = [...catalogueFabrics, ...heritageFabrics];
-
-export function getFabricByName(name: string): Fabric | undefined {
+export function getFabricByName(fabrics: Fabric[], name: string): Fabric | undefined {
   return fabrics.find((f) => f.name === name);
 }
 
-/** Homepage "The house weaves" tiles: top real fabrics by saree count, Satin excluded, same as the reference. */
-export function getWeaveGridFabrics(count = 5): Fabric[] {
-  return catalogueFabrics.filter((f) => f.name !== "Satin").slice(0, count);
+/** CraftPanel's three heritage weaves: the only fabrics with onLoomDays set. */
+export function getHeritageWeaves(fabrics: Fabric[]): Fabric[] {
+  return fabrics.filter((f) => f.onLoomDays);
 }
 
-/** CraftPanel's three heritage weaves. */
-export function getHeritageWeaves(): Fabric[] {
-  return heritageFabrics;
+/** Homepage "The house weaves" tiles: top real fabrics by saree count, Satin and the heritage weaves excluded. */
+export function getWeaveGridFabrics(fabrics: Fabric[], sarees: Saree[], count = 5): Fabric[] {
+  return fabrics
+    .filter((f) => !f.onLoomDays && f.name !== "Satin")
+    .map((f) => ({ fabric: f, sareeCount: getSareesByFabric(sarees, f.name).length }))
+    .sort((a, b) => b.sareeCount - a.sareeCount)
+    .slice(0, count)
+    .map((x) => x.fabric);
 }
 
-// ---- mood stories: shop by colour ----
+// ---- mood stories ----
 
-const MOOD_COLORS = ["Pink", "Red", "Yellow", "Blue", "Green", "Purple"];
+interface RawMoodStory extends Omit<MoodStory, "heroImage"> {
+  heroImage: SanityImageRef;
+}
 
-const MOOD_IMAGE_OVERRIDE: Record<string, string> = {
-  Pink: "https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1774439658042__1774439657224__6.jpg",
-  Yellow:
-    "https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1772447691560__1772447690715__633042_047-213864-1.jpg.jpeg",
-  Blue: "https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1775134990618__1775134989827__6.jpg",
-};
-
-export const moodStories: MoodStory[] = MOOD_COLORS.map((color) => {
-  const count = RAW_PRODUCTS.filter((p) => p.color === color).length;
-  const firstMatch = RAW_PRODUCTS.find((p) => p.color === color);
-  return {
-    id: "mood-" + slugify(color),
-    colorName: color,
-    subtitle: `${count} sarees`,
-    heroImage: MOOD_IMAGE_OVERRIDE[color] ?? firstMatch?.image ?? HERO_IMAGE,
-    filterQuery: { colorFamily: color },
-  };
-});
+export async function getMoodStories(): Promise<MoodStory[]> {
+  const raw = await client.fetch<RawMoodStory[]>(
+    MOOD_STORIES_QUERY,
+    {},
+    { next: { tags: ["moodStory"] } },
+  );
+  return raw.map((m) => ({ ...m, heroImage: toImageUrl(m.heroImage) }));
+}
 
 // ---- stores ----
-// Coordinates are each city's real lat/lng. Addresses are placeholders, the
-// real ones per /docs/1_PRD.md section 8 are still needed from Mugdha.
 
-export const stores: Store[] = [
-  {
-    id: "store-hyderabad",
-    city: "Hyderabad",
-    address: "Mugdha Art Studio, Banjara Hills, Hyderabad, Telangana 500034, India",
-    coordinates: { lat: 17.385, lng: 78.4867 },
-    storeCount: 11,
-  },
-  {
-    id: "store-bengaluru",
-    city: "Bengaluru",
-    address: "Mugdha Art Studio, Indiranagar, Bengaluru, Karnataka 560038, India",
-    coordinates: { lat: 12.9716, lng: 77.5946 },
-    storeCount: 6,
-  },
-  {
-    id: "store-chennai",
-    city: "Chennai",
-    address: "Mugdha Art Studio, T Nagar, Chennai, Tamil Nadu 600017, India",
-    coordinates: { lat: 13.0827, lng: 80.2707 },
-    storeCount: 4,
-  },
-  {
-    id: "store-vijayawada",
-    city: "Vijayawada",
-    address: "Mugdha Art Studio, MG Road, Vijayawada, Andhra Pradesh 520010, India",
-    coordinates: { lat: 16.5062, lng: 80.648 },
-    storeCount: 3,
-  },
-  {
-    id: "store-visakhapatnam",
-    city: "Visakhapatnam",
-    address: "Mugdha Art Studio, Dwaraka Nagar, Visakhapatnam, Andhra Pradesh 530016, India",
-    coordinates: { lat: 17.6868, lng: 83.2185 },
-    storeCount: 2,
-  },
-];
+export async function getStores(): Promise<Store[]> {
+  return client.fetch<Store[]>(STORES_QUERY, {}, { next: { tags: ["store"] } });
+}
 
 // ---- bridal looks ----
-// Not rendered on the homepage in the reference (the homepage bridal section
-// is one reverent editorial image, no grid), seeded here for the dedicated
+// Not rendered on the homepage (the homepage bridal section is one
+// reverent editorial image, no grid), fetched here for the dedicated
 // /bridal page a later step builds.
 
-export const bridalLooks: BridalLook[] = [
-  {
-    id: "bridal-muhurtham",
-    ceremony: "Muhurtham",
-    sareeId: sarees[0]?.id ?? "",
-    image: BRIDAL_IMAGE,
-    note: "A Kanchipuram heirloom for the wedding hour itself.",
-  },
-  {
-    id: "bridal-reception",
-    ceremony: "Reception",
-    sareeId: sarees[1]?.id ?? "",
-    image: HERO_IMAGE,
-    note: "Rich zari and a bolder colour for the evening.",
-  },
-  {
-    id: "bridal-haldi",
-    ceremony: "Haldi",
-    sareeId: sarees.find((s) => s.colorFamily === "Yellow")?.id ?? "",
-    image:
-      "https://mugdhabk.s3.ap-south-1.amazonaws.com/compress/1771651596343__mainImage1771651595918.jpg",
-    note: "Turmeric yellow, light enough to move in all morning.",
-  },
-];
+interface RawBridalLook extends Omit<BridalLook, "image"> {
+  image: SanityImageRef;
+}
+
+export async function getBridalLooks(): Promise<BridalLook[]> {
+  const raw = await client.fetch<RawBridalLook[]>(
+    BRIDAL_LOOKS_QUERY,
+    {},
+    { next: { tags: ["bridalLook"] } },
+  );
+  return raw.map((b) => ({ ...b, image: toImageUrl(b.image) }));
+}
 
 // ---- journal ----
 // Not consumed on the homepage yet beyond the footer link label.
 
-export const journalPosts: JournalPost[] = [];
+interface RawJournalPost extends Omit<JournalPost, "cover"> {
+  cover: SanityImageRef;
+}
+
+export async function getJournalPosts(): Promise<JournalPost[]> {
+  const raw = await client.fetch<RawJournalPost[]>(
+    JOURNAL_POSTS_QUERY,
+    {},
+    { next: { tags: ["journalPost"] } },
+  );
+  return raw.map((j) => ({ ...j, cover: toImageUrl(j.cover) }));
+}
+
+// ---- colour facets ----
+// Not a Sanity content type: swatch hexes are a fixed presentation lookup
+// (like the PAL/UI colour tokens), counts are derived live from the real
+// migrated sarees rather than a separately maintained list.
+
+const SWATCH_BY_COLOR: Record<string, string> = {
+  Red: "#9e2a2b",
+  Pink: "#d96a96",
+  Orange: "#d2691e",
+  Yellow: "#d8a33a",
+  Green: "#2f6b4f",
+  Blue: "#22456e",
+  Purple: "#7a5a9e",
+  White: "#f0ece3",
+  Black: "#1a1a1a",
+};
+
+export function getColorFacets(
+  sarees: Saree[],
+): { name: string; swatch: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const s of sarees) {
+    counts.set(s.colorFamily, (counts.get(s.colorFamily) ?? 0) + 1);
+  }
+  return Array.from(counts.entries())
+    .map(([name, count]) => ({ name, swatch: SWATCH_BY_COLOR[name] ?? "#888", count }))
+    .sort((a, b) => b.count - a.count);
+}
 
 // ---- site settings ----
 
-export const siteSettings: SiteSettings = {
-  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "",
-  announcementTicker: [
-    "உத்ஸவ் UTSAV",
-    "NEW DROPS EVERY FRIDAY",
-    "SILK MARK CERTIFIED",
-    "PURE ZARI",
-    "ఆర్డర్ ఆన్ వాట్సాప్",
-    "WOVEN IN HOUSE",
-    "25+ STORES",
-  ],
-  socialLinks: {
-    instagram: undefined,
-    whatsapp: undefined,
-  },
-  mapsProvider: "google",
-};
+export async function getSiteSettings(): Promise<SiteSettings> {
+  const settings = await client.fetch<SiteSettings | null>(
+    SITE_SETTINGS_QUERY,
+    {},
+    { next: { tags: ["siteSettings"] } },
+  );
+  return (
+    settings ?? {
+      whatsappNumber: "",
+      announcementTicker: [],
+      mapsProvider: "google",
+    }
+  );
+}

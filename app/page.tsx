@@ -13,17 +13,17 @@ import { TempleBorder } from "@/components/motifs/TempleBorder";
 import { Kolam } from "@/components/motifs/Kolam";
 import {
   BRIDAL_IMAGE,
-  colorFacets,
-  fabrics,
+  getColorFacets,
+  getFabrics,
   getHeritageWeaves,
   getNewDrops,
+  getMoodStories,
   getSareesByColor,
   getSareesByFabric,
+  getSarees,
+  getSiteSettings,
+  getStores,
   getWeaveGridFabrics,
-  moodStories,
-  sarees,
-  siteSettings,
-  stores,
 } from "@/lib/data";
 import { formatINR } from "@/lib/format";
 
@@ -34,23 +34,31 @@ function slugify(name: string): string {
     .replace(/(^-|-$)/g, "");
 }
 
-export default function Home() {
-  const weaveTiles: WeaveTile[] = getWeaveGridFabrics().map((f) => ({
+export default async function Home() {
+  const [sarees, fabrics, moodStories, stores, siteSettings] = await Promise.all([
+    getSarees(),
+    getFabrics(),
+    getMoodStories(),
+    getStores(),
+    getSiteSettings(),
+  ]);
+
+  const weaveTiles: WeaveTile[] = getWeaveGridFabrics(fabrics, sarees).map((f) => ({
     name: f.name,
     script: f.script,
     image: f.heroImage,
-    sareeCount: getSareesByFabric(f.name).length,
+    sareeCount: getSareesByFabric(sarees, f.name).length,
     href: `/sarees?fabric=${slugify(f.name)}`,
   }));
 
   const moodTiles: MoodTile[] = moodStories.map((m) => ({
     name: m.colorName,
     image: m.heroImage,
-    sareeCount: getSareesByColor(m.colorName).length,
+    sareeCount: getSareesByColor(sarees, m.colorName).length,
     href: `/sarees?color=${slugify(m.colorName)}`,
   }));
 
-  const dropTiles: DropTile[] = getNewDrops().map((s) => ({
+  const dropTiles: DropTile[] = getNewDrops(sarees).map((s) => ({
     name: s.name,
     fabric: s.fabric,
     price: formatINR(s.price),
@@ -61,6 +69,8 @@ export default function Home() {
   const fabricOptions = fabrics
     .filter((f) => !f.onLoomDays) // the real catalogue weaves only, not the three heritage weaves
     .map((f) => f.name);
+
+  const colorFacets = getColorFacets(sarees);
 
   return (
     <div className="mug-root">
@@ -86,7 +96,7 @@ export default function Home() {
           settings={siteSettings}
         />
         <NewDropsRail tiles={dropTiles} allSareesHref="/sarees" />
-        <CraftPanel weaves={getHeritageWeaves()} />
+        <CraftPanel weaves={getHeritageWeaves(fabrics)} />
         <BridalSection image={BRIDAL_IMAGE} />
         <StoreLocator stores={stores} variant="teaser" />
       </main>
